@@ -1,3 +1,9 @@
+pub mod errors;
+pub mod manifold;
+
+pub use errors::ManifoldError;
+pub use manifold::Manifold;
+
 pub fn add(left: usize, right: usize) -> usize {
     left + right
 }
