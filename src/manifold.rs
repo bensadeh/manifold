@@ -9,6 +9,10 @@ impl Manifold {
     pub fn builder() -> ManifoldBuilder {
         ManifoldBuilder::default()
     }
+
+    pub fn apply(&self, input: String) -> String {
+        format!("{}-{}", self.field1, input)
+    }
 }
 
 #[derive(Default)]
@@ -27,7 +31,6 @@ impl ManifoldBuilder {
         self.field2 = Some(value);
         self
     }
-
 
     pub fn compile(self) -> Result<Manifold, ManifoldError> {
         Ok(Manifold {
