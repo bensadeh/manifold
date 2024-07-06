@@ -1,0 +1,17 @@
+[package]
+name = "inlet_manifold"
+version = "0.1.0"
+edition = "2021"
+authors = ["Ben Sadeh"]
+description = "A highlighting library"
+repository = "https://github.com/bensadeh/manifold"
+keywords = ["highlighting", "syntax-highlighting", "tailspin"]
+license = "MIT"
+
+[lints.clippy]
+missing-const-for-fn = "deny"
+
+
+[dependencies]
+nu-ansi-term = "0.50.0"
+regex = "1.10.4"
