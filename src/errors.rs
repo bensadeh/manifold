@@ -1,5 +1,5 @@
-
-use std::fmt;
+use std::error::Error;
+use std::fmt::{Display, Formatter, Result as FmtResult};
 
 /// Custom error type for ManifoldBuilder.
 #[derive(Debug)]
@@ -9,8 +9,8 @@ pub enum ManifoldError {
     // Add more fields as needed
 }
 
-impl fmt::Display for ManifoldError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+impl Display for ManifoldError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         match self {
             ManifoldError::Field1Missing => write!(f, "field1 is required"),
             ManifoldError::Field2Missing => write!(f, "field2 is required"),
@@ -19,4 +19,4 @@ impl fmt::Display for ManifoldError {
     }
 }
 
-impl std::error::Error for ManifoldError {}
+impl Error for ManifoldError {}
