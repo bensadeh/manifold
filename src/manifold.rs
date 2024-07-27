@@ -39,6 +39,10 @@ impl Manifold {
         self.highlighters = highlighters;
         self
     }
+
+    pub fn apply(self, text: String) -> String {
+        "".to_string()
+    }
 }
 
 // Implement the Default trait for Manifold
