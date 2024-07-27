@@ -18,14 +18,12 @@ pub struct Manifold {
 }
 
 impl Manifold {
-    // Make the constructor private
     const fn new() -> Self {
         Manifold {
             highlighters: Vec::new(),
         }
     }
 
-    // Public builder method to create a ManifoldBuilder
     fn builder() -> ManifoldBuilder {
         ManifoldBuilder {
             highlighters: Vec::new(),
