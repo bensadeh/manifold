@@ -1,6 +1,9 @@
-use nu_ansi_term::Style;
+use nu_ansi_term::Style as NuStyle;
 use once_cell::sync::Lazy;
-use regex::Regex;
+use regex::{Captures, Regex};
+
+use crate::highlighter::Highlight;
+use crate::style::Style;
 
 static NUMBER_REGEX: Lazy<Regex> = Lazy::new(|| {
     Regex::new(
@@ -17,21 +20,23 @@ static NUMBER_REGEX: Lazy<Regex> = Lazy::new(|| {
 });
 
 pub struct NumberHighlighter {
-    style: Style,
+    style: NuStyle,
 }
 
 impl NumberHighlighter {
-    pub const fn new(style: Style) -> Self {
-        Self { style }
+    pub fn new(style: Style) -> Self {
+        Self {
+            style: style.into(),
+        }
     }
 }
 
-// impl Highlight for NumberHighlighter {
-//     fn apply(&self, input: &str) -> String {
-//         NUMBER_REGEX
-//             .replace_all(input, |caps: &Captures<'_>| {
-//                 format!("{}", self.style.paint(&caps[0]))
-//             })
-//             .to_string()
-//     }
-// }
+impl Highlight for NumberHighlighter {
+    fn apply(&self, input: String) -> String {
+        NUMBER_REGEX
+            .replace_all(input.as_str(), |caps: &Captures<'_>| {
+                format!("{}", self.style.paint(&caps[0]))
+            })
+            .to_string()
+    }
+}

@@ -4,6 +4,7 @@ pub use manifold::Manifold;
 pub mod errors;
 mod highlighter;
 pub mod manifold;
+mod style;
 
 pub const fn add(left: usize, right: usize) -> usize {
     left + right
