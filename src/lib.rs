@@ -1,7 +1,5 @@
-pub use errors::ManifoldError;
 pub use manifold::Manifold;
 
-pub mod errors;
 mod highlighter;
 pub mod manifold;
 mod style;

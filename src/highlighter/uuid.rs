@@ -2,7 +2,7 @@ use nu_ansi_term::Style as NuStyle;
 use once_cell::sync::Lazy;
 use regex::{Captures, Regex};
 
-use crate::highlighter::Highlight;
+use crate::manifold::Highlight;
 use crate::style::Style;
 
 static UUID_REGEX: Lazy<Regex> = Lazy::new(|| {
@@ -29,11 +29,11 @@ pub struct UuidHighlighter {
 }
 
 impl UuidHighlighter {
-    pub fn new(number_style: Style, letter_style: Style, dash_style: Style) -> Self {
+    pub fn new(number: Style, letter: Style, dash: Style) -> Self {
         Self {
-            number: number_style.into(),
-            letter: letter_style.into(),
-            dash: dash_style.into(),
+            number: number.into(),
+            letter: letter.into(),
+            dash: dash.into(),
         }
     }
 }

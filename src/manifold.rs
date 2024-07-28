@@ -1,32 +1,11 @@
-use std::collections::HashSet;
 use std::sync::Arc;
 
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
-enum HighlighterType {
-    Foo,
-    Bar,
-}
+use crate::highlighter::number::NumberHighlighter;
+use crate::highlighter::uuid::UuidHighlighter;
+use crate::style::{Color, Style};
 
-#[derive(Debug)]
-struct Highlighter {
-    highlighter_type: HighlighterType,
-    colors: Option<Vec<String>>,
-}
-
-// Define the Highlight trait
-pub trait Highlight {
+pub trait Highlight: Sync + Send {
     fn apply(&self, input: String) -> String;
-}
-
-// Implement the Highlight trait for Highlighter
-impl Highlight for Highlighter {
-    fn apply(&self, input: String) -> String {
-        // Example implementation of the apply method
-        format!(
-            "Applied {:?} highlighter with colors: {:?}",
-            self.highlighter_type, self.colors
-        )
-    }
 }
 
 pub struct Manifold {
@@ -43,12 +22,9 @@ impl Manifold {
     fn builder() -> ManifoldBuilder {
         ManifoldBuilder {
             highlighters: Vec::new(),
-            used_highlighters: HashSet::new(),
-            error: None,
         }
     }
 
-    // Method to set highlighters
     fn with_highlighters(mut self, highlighters: Vec<Arc<dyn Highlight>>) -> Self {
         self.highlighters = highlighters;
         self
@@ -61,70 +37,85 @@ impl Manifold {
     }
 }
 
-// Implement the Default trait for Manifold
 impl Default for Manifold {
     fn default() -> Self {
-        Manifold::new()
+        Manifold::builder()
+            .with_number_highlighter()
+            .with_uuid_highlighter()
+            .build()
     }
 }
 
 struct ManifoldBuilder {
     highlighters: Vec<Arc<dyn Highlight>>,
-    used_highlighters: HashSet<HighlighterType>,
-    error: Option<String>,
 }
 
 impl ManifoldBuilder {
-    fn with_new_foo_highlighter(mut self) -> Self {
-        if self.used_highlighters.contains(&HighlighterType::Foo) {
-            self.error = Some("Highlighter 'Foo' already added!".to_string());
-        } else {
-            self.highlighters.push(Arc::new(Highlighter {
-                highlighter_type: HighlighterType::Foo,
-                colors: None,
-            }));
-            self.used_highlighters.insert(HighlighterType::Foo);
-        }
+    fn with_number_highlighter(mut self) -> Self {
+        let style = Style {
+            fg: Some(Color::Cyan),
+            ..Style::default()
+        };
+
+        let number_highlighter = NumberHighlighter::new(style);
+
+        self.highlighters.push(Arc::new(number_highlighter));
+
         self
     }
 
-    fn with_new_bar_highlighter_with_colors(mut self, colors: Vec<String>) -> Self {
-        if self.used_highlighters.contains(&HighlighterType::Bar) {
-            self.error = Some("Highlighter 'Bar' already added!".to_string());
-        } else {
-            self.highlighters.push(Arc::new(Highlighter {
-                highlighter_type: HighlighterType::Bar,
-                colors: Some(colors),
-            }));
-            self.used_highlighters.insert(HighlighterType::Bar);
-        }
+    fn with_number_highlighter_from_style(mut self, style: Style) -> Self {
+        let number_highlighter = NumberHighlighter::new(style);
+
+        self.highlighters.push(Arc::new(number_highlighter));
+
         self
     }
 
-    fn build(self) -> Result<Manifold, String> {
-        if let Some(error) = self.error {
-            Err(error)
-        } else {
-            Ok(Manifold::new().with_highlighters(self.highlighters))
-        }
+    fn with_uuid_highlighter(mut self) -> Self {
+        let number = Style {
+            fg: Some(Color::Blue),
+            italic: true,
+            ..Style::default()
+        };
+        let letter = Style {
+            fg: Some(Color::Magenta),
+            italic: true,
+            ..Style::default()
+        };
+        let dash = Style {
+            fg: Some(Color::Red),
+            ..Style::default()
+        };
+
+        let number_highlighter = UuidHighlighter::new(number, letter, dash);
+
+        self.highlighters.push(Arc::new(number_highlighter));
+
+        self
+    }
+
+    fn with_uuid_highlighter_from_style(mut self, number: Style, letter: Style, dash: Style) -> Self {
+        let number_highlighter = UuidHighlighter::new(number, letter, dash);
+
+        self.highlighters.push(Arc::new(number_highlighter));
+
+        self
+    }
+
+    fn build(self) -> Manifold {
+        Manifold::new().with_highlighters(self.highlighters)
     }
 }
 
 fn main() {
     // Using the builder to create a Manifold
-    let result = Manifold::builder()
-        .with_new_foo_highlighter()
-        .with_new_bar_highlighter_with_colors(vec!["red".to_string(), "blue".to_string()])
+    let manifold = Manifold::builder()
+        .with_number_highlighter()
+        .with_uuid_highlighter()
         .build();
 
-    match result {
-        Ok(manifold) => {
-            let output = manifold.apply("Some text".to_string());
-            println!("Output: {:?}", output);
-        }
-        Err(e) => println!("Error: {:?}", e),
-    }
+    let converted = manifold.apply("text".to_string());
 
-    // Using the default method to create a Manifold
-    let default_manifold = Manifold::default();
+    println!("{}", converted);
 }

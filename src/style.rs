@@ -1,5 +1,6 @@
 use nu_ansi_term::{Color as NuColor, Style as NuStyle};
 
+#[derive(Default)]
 pub struct Style {
     pub fg: Option<Color>,
     pub bg: Option<Color>,
@@ -20,8 +21,6 @@ pub enum Color {
     LightYellow,
     Blue,
     LightBlue,
-    Purple,
-    LightPurple,
     Magenta,
     LightMagenta,
     Cyan,
@@ -44,8 +43,6 @@ impl From<&Color> for NuColor {
             Color::LightYellow => NuColor::LightYellow,
             Color::Blue => NuColor::Blue,
             Color::LightBlue => NuColor::LightBlue,
-            Color::Purple => NuColor::Purple,
-            Color::LightPurple => NuColor::LightPurple,
             Color::Magenta => NuColor::Magenta,
             Color::LightMagenta => NuColor::LightMagenta,
             Color::Cyan => NuColor::Cyan,
@@ -67,6 +64,7 @@ impl From<Style> for NuStyle {
         if let Some(bg) = &style.bg {
             nu_style = nu_style.on(NuColor::from(bg));
         }
+
         if style.bold {
             nu_style = nu_style.bold();
         }

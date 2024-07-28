@@ -2,7 +2,7 @@ use nu_ansi_term::Style as NuStyle;
 use once_cell::sync::Lazy;
 use regex::{Captures, Regex};
 
-use crate::highlighter::Highlight;
+use crate::manifold::Highlight;
 use crate::style::Style;
 
 static NUMBER_REGEX: Lazy<Regex> = Lazy::new(|| {
