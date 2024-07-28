@@ -2,7 +2,7 @@ pub use manifold::Manifold;
 
 mod highlighter;
 pub mod manifold;
-mod style;
+pub mod style;
 
 pub const fn add(left: usize, right: usize) -> usize {
     left + right
@@ -11,6 +11,8 @@ pub const fn add(left: usize, right: usize) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    mod escape_code_converter;
 
     #[test]
     fn it_works() {
