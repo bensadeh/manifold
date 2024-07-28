@@ -30,7 +30,7 @@ impl Highlight for Highlighter {
 }
 
 pub struct Manifold {
-    highlighters: Vec<Arc<Box<dyn Highlight>>>,
+    highlighters: Vec<Arc<dyn Highlight>>,
 }
 
 impl Manifold {
@@ -49,7 +49,7 @@ impl Manifold {
     }
 
     // Method to set highlighters
-    fn with_highlighters(mut self, highlighters: Vec<Arc<Box<dyn Highlight>>>) -> Self {
+    fn with_highlighters(mut self, highlighters: Vec<Arc<dyn Highlight>>) -> Self {
         self.highlighters = highlighters;
         self
     }
@@ -69,7 +69,7 @@ impl Default for Manifold {
 }
 
 struct ManifoldBuilder {
-    highlighters: Vec<Arc<Box<dyn Highlight>>>,
+    highlighters: Vec<Arc<dyn Highlight>>,
     used_highlighters: HashSet<HighlighterType>,
     error: Option<String>,
 }
@@ -79,10 +79,10 @@ impl ManifoldBuilder {
         if self.used_highlighters.contains(&HighlighterType::Foo) {
             self.error = Some("Highlighter 'Foo' already added!".to_string());
         } else {
-            self.highlighters.push(Arc::new(Box::new(Highlighter {
+            self.highlighters.push(Arc::new(Highlighter {
                 highlighter_type: HighlighterType::Foo,
                 colors: None,
-            })));
+            }));
             self.used_highlighters.insert(HighlighterType::Foo);
         }
         self
@@ -92,10 +92,10 @@ impl ManifoldBuilder {
         if self.used_highlighters.contains(&HighlighterType::Bar) {
             self.error = Some("Highlighter 'Bar' already added!".to_string());
         } else {
-            self.highlighters.push(Arc::new(Box::new(Highlighter {
+            self.highlighters.push(Arc::new(Highlighter {
                 highlighter_type: HighlighterType::Bar,
                 colors: Some(colors),
-            })));
+            }));
             self.used_highlighters.insert(HighlighterType::Bar);
         }
         self
