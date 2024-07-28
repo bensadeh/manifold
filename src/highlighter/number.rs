@@ -25,9 +25,7 @@ pub struct NumberHighlighter {
 
 impl NumberHighlighter {
     pub fn new(style: Style) -> Self {
-        Self {
-            style: style.into(),
-        }
+        Self { style: style.into() }
     }
 }
 
@@ -38,5 +36,33 @@ impl Highlight for NumberHighlighter {
                 format!("{}", self.style.paint(&caps[0]))
             })
             .to_string()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::manifold::Highlight;
+    use crate::style::Color::Red;
+    use crate::style::Style;
+    use crate::tests::escape_code_converter::EscapeCodeConverter;
+
+    use super::*;
+
+    #[test]
+    fn test_number_highlighter() {
+        let style = Style {
+            fg: Some(Red),
+            ..Style::default()
+        };
+        let highlighter = NumberHighlighter::new(style);
+        let converter = EscapeCodeConverter::new();
+
+        let input = "The fox jumps over 13 dogs. The number 42.5 is here.".to_string();
+        let expected = "The fox jumps over [red]13[reset] dogs. The number [red]42.5[reset] is here.".to_string();
+
+        let actual = highlighter.apply(input);
+        let actual_converted = converter.convert(actual);
+
+        assert_eq!(expected, actual_converted);
     }
 }

@@ -12,7 +12,7 @@ pub const fn add(left: usize, right: usize) -> usize {
 mod tests {
     use super::*;
 
-    mod escape_code_converter;
+    pub(crate) mod escape_code_converter;
 
     #[test]
     fn it_works() {
