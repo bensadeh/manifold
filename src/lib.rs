@@ -2,6 +2,7 @@ pub use manifold::Manifold;
 
 mod highlighter;
 pub mod manifold;
+mod split_and_apply;
 pub mod style;
 
 pub const fn add(left: usize, right: usize) -> usize {
