@@ -46,7 +46,7 @@ impl Default for Manifold {
             .with_number_highlighter()
             .with_uuid_highlighter()
             .build()
-            .unwrap()
+            .expect("Default Manifold construction should never fail.")
     }
 }
 
