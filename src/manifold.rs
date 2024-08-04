@@ -5,7 +5,7 @@ use crate::highlighter::uuid::UuidHighlighter;
 use crate::style::{Color, Style};
 
 pub trait Highlight: Sync + Send {
-    fn apply(&self, input: String) -> String;
+    fn apply(&self, input: &str) -> String;
 }
 
 pub struct Manifold {
@@ -33,7 +33,7 @@ impl Manifold {
     pub fn apply(self, text: String) -> String {
         self.highlighters
             .into_iter()
-            .fold(text, |acc, highlighter| highlighter.apply(acc))
+            .fold(text, |acc, highlighter| highlighter.apply(acc.as_str()))
     }
 }
 

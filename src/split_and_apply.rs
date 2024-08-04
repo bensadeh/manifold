@@ -2,7 +2,7 @@ const MAX_ALLOCATION_SIZE: usize = 1024 * 1024; // 1 MiB
 
 pub fn apply_to_unhighlighted<F>(input: &str, highlight_fn: F) -> String
 where
-    F: Fn(&str) -> String,
+    F: Fn(&str) -> String + Send + Sync,
 {
     let chunks = split_into_chunks(input);
     let mut result = allocate_string(input);

@@ -1,5 +1,8 @@
 use std::collections::HashMap;
 
+use crate::style::Color::{Blue, Green, Red};
+use crate::style::Style;
+
 pub trait ConvertEscapeCodes {
     fn convert_escape_codes(self) -> String;
 }
@@ -28,6 +31,27 @@ impl ConvertEscapeCodes for String {
         }
 
         result
+    }
+}
+
+pub fn red() -> Style {
+    Style {
+        fg: Some(Red),
+        ..Style::default()
+    }
+}
+
+pub fn blue() -> Style {
+    Style {
+        fg: Some(Blue),
+        ..Style::default()
+    }
+}
+
+pub fn green() -> Style {
+    Style {
+        fg: Some(Green),
+        ..Style::default()
     }
 }
 

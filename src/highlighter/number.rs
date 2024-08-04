@@ -30,11 +30,9 @@ impl NumberHighlighter {
 }
 
 impl Highlight for NumberHighlighter {
-    fn apply(&self, input: String) -> String {
+    fn apply(&self, input: &str) -> String {
         NUMBER_REGEX
-            .replace_all(input.as_str(), |caps: &Captures<'_>| {
-                format!("{}", self.style.paint(&caps[0]))
-            })
+            .replace_all(input, |caps: &Captures<'_>| format!("{}", self.style.paint(&caps[0])))
             .to_string()
     }
 }
@@ -42,25 +40,29 @@ impl Highlight for NumberHighlighter {
 #[cfg(test)]
 mod tests {
     use crate::manifold::Highlight;
-    use crate::style::Color::Red;
-    use crate::style::Style;
-    use crate::tests::escape_code_converter::ConvertEscapeCodes;
+    use crate::tests::escape_code_converter::{ConvertEscapeCodes, red};
 
     use super::*;
 
     #[test]
     fn test_number_highlighter() {
-        let style = Style {
-            fg: Some(Red),
-            ..Style::default()
-        };
-        let highlighter = NumberHighlighter::new(style);
+        let highlighter = NumberHighlighter::new(red());
 
-        let input = "The fox jumps over 13 dogs. The number 42.5 is here.".to_string();
-        let expected = "The fox jumps over [red]13[reset] dogs. The number [red]42.5[reset] is here.".to_string();
+        let cases = vec![
+            (
+                "The fox jumps over 13 dogs. The number 42.5 is here.",
+                "The fox jumps over [red]13[reset] dogs. The number [red]42.5[reset] is here.",
+            ),
+            (
+                "There are 1001 nights in the tale.",
+                "There are [red]1001[reset] nights in the tale.",
+            ),
+            ("No numbers here!", "No numbers here!"),
+        ];
 
-        let actual = highlighter.apply(input);
-
-        assert_eq!(expected, actual.convert_escape_codes());
+        for (input, expected) in cases {
+            let actual = highlighter.apply(input);
+            assert_eq!(expected, actual.convert_escape_codes());
+        }
     }
 }
