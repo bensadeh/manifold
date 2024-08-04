@@ -1,4 +1,7 @@
+pub use crate::error::Error;
 pub use crate::manifold::Highlighter;
+pub use crate::style::Color;
+pub use crate::style::Style;
 
 mod error;
 mod highlighter;
