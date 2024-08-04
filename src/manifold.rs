@@ -3,7 +3,7 @@ use std::sync::Arc;
 use crate::highlighter::number::NumberHighlighter;
 use crate::highlighter::uuid::UuidHighlighter;
 use crate::split_and_apply::apply_only_to_unhighlighted;
-use crate::style::{blue_and_italic, cyan, magenta_and_italic, red, Style};
+use crate::style::*;
 
 pub trait Highlight: Sync + Send {
     fn apply(&self, input: &str) -> String;
@@ -32,9 +32,9 @@ impl Manifold {
     }
 
     pub fn apply(self, text: String) -> String {
-        self.highlighters.into_iter().fold(text, |acc, highlighter| {
-            apply_only_to_unhighlighted(&acc, |chunk| highlighter.apply(chunk))
-        })
+        self.highlighters
+            .into_iter()
+            .fold(text, |acc, highlighter| apply_only_to_unhighlighted(&acc, highlighter))
     }
 }
 

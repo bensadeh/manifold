@@ -1,29 +1,18 @@
+use std::sync::Arc;
+
+use crate::manifold::Highlight;
+
 const MAX_ALLOCATION_SIZE: usize = 4 * 1024; // 4 KiB
 
-/// Applies a given function to the unhighlighted parts of an input string, preserving any existing highlighted
-/// sections.
-///
-/// # Arguments
-///
-/// * `input` - A string slice that holds the input text to be processed.
-/// * `highlight_fn` - A closure or function that takes a string slice and returns a new, processed string. This
-///   function is applied only to the unhighlighted sections of the input text.
-///
-/// # Returns
-///
-/// A new `String` where the `highlight_fn` has been applied to all unhighlighted sections of the input text, while already highlighted sections remain unchanged.
-///
-pub fn apply_only_to_unhighlighted<F>(input: &str, highlight_fn: F) -> String
-where
-    F: Fn(&str) -> String + Send + Sync,
-{
+/// Applies a given function to the unhighlighted parts of an input string, preserving any existing highlighting.
+pub fn apply_only_to_unhighlighted(input: &str, highlighter: Arc<dyn Highlight>) -> String {
     let chunks = split_into_chunks(input);
     let mut result = allocate_string(input);
 
     for chunk in chunks {
         match chunk {
             Chunk::NotHighlighted(text) => {
-                result.push_str(&highlight_fn(text));
+                result.push_str(&highlighter.apply(text));
             }
             Chunk::AlreadyHighlighted(text) => {
                 result.push_str(text);
