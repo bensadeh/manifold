@@ -81,3 +81,24 @@ impl From<Style> for NuStyle {
         nu_style
     }
 }
+
+pub(crate) fn green() -> Style {
+    Style {
+        fg: Some(Color::Green),
+        ..Style::default()
+    }
+}
+
+pub(crate) fn red() -> Style {
+    Style {
+        fg: Some(Color::Red),
+        ..Style::default()
+    }
+}
+
+pub(crate) fn blue() -> Style {
+    Style {
+        fg: Some(Color::Blue),
+        ..Style::default()
+    }
+}

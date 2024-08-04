@@ -59,7 +59,8 @@ impl Highlight for UuidHighlighter {
 #[cfg(test)]
 mod tests {
     use crate::manifold::Highlight;
-    use crate::tests::escape_code_converter::{blue, ConvertEscapeCodes, green, red};
+    use crate::style::{blue, green, red};
+    use crate::tests::escape_code_converter::ConvertEscapeCodes;
 
     use super::*;
 

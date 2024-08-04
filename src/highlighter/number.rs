@@ -40,7 +40,8 @@ impl Highlight for NumberHighlighter {
 #[cfg(test)]
 mod tests {
     use crate::manifold::Highlight;
-    use crate::tests::escape_code_converter::{ConvertEscapeCodes, red};
+    use crate::style::red;
+    use crate::tests::escape_code_converter::ConvertEscapeCodes;
 
     use super::*;
 
