@@ -1,4 +1,4 @@
-pub use manifold::Manifold;
+pub use crate::manifold::Highlighter;
 
 mod error;
 mod highlighter;

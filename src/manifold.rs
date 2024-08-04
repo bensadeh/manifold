@@ -11,19 +11,19 @@ pub trait Highlight: Sync + Send {
     fn apply(&self, input: &str) -> String;
 }
 
-pub struct Manifold {
+pub struct Highlighter {
     highlighters: Vec<Arc<dyn Highlight>>,
 }
 
-impl Manifold {
+impl Highlighter {
     const fn new() -> Self {
-        Manifold {
+        Highlighter {
             highlighters: Vec::new(),
         }
     }
 
-    pub fn builder() -> ManifoldBuilder {
-        ManifoldBuilder {
+    pub fn builder() -> HighlightBuilder {
+        HighlightBuilder {
             highlighters: Vec::new(),
             regex_errors: Vec::new(),
         }
@@ -42,9 +42,9 @@ impl Manifold {
     }
 }
 
-impl Default for Manifold {
+impl Default for Highlighter {
     fn default() -> Self {
-        Manifold::builder()
+        Highlighter::builder()
             .with_number_highlighter(None)
             .with_uuid_highlighter(None, None, None)
             .with_quote_highlighter(None, None)
@@ -53,12 +53,12 @@ impl Default for Manifold {
     }
 }
 
-pub struct ManifoldBuilder {
+pub struct HighlightBuilder {
     highlighters: Vec<Arc<dyn Highlight>>,
     regex_errors: Vec<regex::Error>,
 }
 
-impl ManifoldBuilder {
+impl HighlightBuilder {
     fn try_add_highlighter<T: Highlight + 'static>(mut self, highlighter: Result<T, regex::Error>) -> Self {
         match highlighter {
             Ok(h) => self.highlighters.push(Arc::new(h)),
@@ -87,9 +87,9 @@ impl ManifoldBuilder {
         )))
     }
 
-    pub fn build(self) -> Result<Manifold, Error> {
+    pub fn build(self) -> Result<Highlighter, Error> {
         match self.regex_errors.is_empty() {
-            true => Ok(Manifold::new().with_highlighters(self.highlighters)),
+            true => Ok(Highlighter::new().with_highlighters(self.highlighters)),
             false => Err(Error::RegexErrors(self.regex_errors)),
         }
     }
