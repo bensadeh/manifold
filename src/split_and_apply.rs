@@ -1,4 +1,4 @@
-const MAX_ALLOCATION_SIZE: usize = 1024 * 1024; // 1 MiB
+const MAX_ALLOCATION_SIZE: usize = 4 * 1024; // 4 KiB
 
 /// Applies a given function to the unhighlighted parts of an input string, preserving any existing highlighted
 /// sections.
