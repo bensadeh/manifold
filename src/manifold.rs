@@ -46,6 +46,7 @@ impl Default for Manifold {
         Manifold::builder()
             .with_number_highlighter()
             .with_uuid_highlighter()
+            .with_quote_highlighter()
             .build()
             .expect("Default Manifold construction should never fail.")
     }
