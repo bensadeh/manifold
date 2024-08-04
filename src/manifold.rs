@@ -52,34 +52,32 @@ pub struct ManifoldBuilder {
 }
 
 impl ManifoldBuilder {
-    pub fn with_number_highlighter(mut self) -> Self {
-        let number_highlighter = NumberHighlighter::new(cyan());
+    pub fn with_number_highlighter(self) -> Self {
+        let highlighter = NumberHighlighter::new(cyan());
 
-        self.highlighters.push(Arc::new(number_highlighter));
-
-        self
+        self.add_highlighter(highlighter)
     }
 
-    pub fn with_number_highlighter_from_style(mut self, style: Style) -> Self {
-        let number_highlighter = NumberHighlighter::new(style);
+    pub fn with_number_highlighter_from_style(self, style: Style) -> Self {
+        let highlighter = NumberHighlighter::new(style);
 
-        self.highlighters.push(Arc::new(number_highlighter));
-
-        self
+        self.add_highlighter(highlighter)
     }
 
-    pub fn with_uuid_highlighter(mut self) -> Self {
-        let number_highlighter = UuidHighlighter::new(blue_and_italic(), magenta_and_italic(), red());
+    pub fn with_uuid_highlighter(self) -> Self {
+        let highlighter = UuidHighlighter::new(blue_and_italic(), magenta_and_italic(), red());
 
-        self.highlighters.push(Arc::new(number_highlighter));
-
-        self
+        self.add_highlighter(highlighter)
     }
 
-    pub fn with_uuid_highlighter_from_style(mut self, number: Style, letter: Style, dash: Style) -> Self {
-        let number_highlighter = UuidHighlighter::new(number, letter, dash);
+    pub fn with_uuid_highlighter_from_style(self, number: Style, letter: Style, dash: Style) -> Self {
+        let highlighter = UuidHighlighter::new(number, letter, dash);
 
-        self.highlighters.push(Arc::new(number_highlighter));
+        self.add_highlighter(highlighter)
+    }
+
+    fn add_highlighter<T: Highlight + 'static>(mut self, highlighter: T) -> Self {
+        self.highlighters.push(Arc::new(highlighter));
 
         self
     }
