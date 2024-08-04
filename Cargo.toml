@@ -8,9 +8,12 @@ repository = "https://github.com/bensadeh/manifold"
 keywords = ["highlighting", "syntax-highlighting", "tailspin"]
 license = "MIT"
 
+[lib]
+name = "inlet_manifold"
+path = "src/lib.rs"
+
 [lints.clippy]
 missing-const-for-fn = "deny"
-
 
 [dependencies]
 nu-ansi-term = "0.50.1"
