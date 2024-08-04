@@ -1,8 +1,9 @@
+use std::cmp::min;
 use std::sync::Arc;
 
 use crate::manifold::Highlight;
 
-const MAX_ALLOCATION_SIZE: usize = 4 * 1024; // 4 KiB
+const FOUR_KB: usize = 4 * 1024; // 4 KiB
 
 /// Applies a given function to the unhighlighted parts of an input string, preserving any existing highlighting.
 pub fn apply_only_to_unhighlighted(input: &str, highlighter: Arc<dyn Highlight>) -> String {
@@ -24,8 +25,8 @@ pub fn apply_only_to_unhighlighted(input: &str, highlighter: Arc<dyn Highlight>)
 }
 
 fn allocate_string(input: &str) -> String {
-    let allocation_size = input.len().saturating_mul(3);
-    let allocation_size = std::cmp::min(allocation_size, MAX_ALLOCATION_SIZE);
+    let input_length_times_3 = input.len().saturating_mul(3);
+    let allocation_size = min(input_length_times_3, FOUR_KB);
 
     String::with_capacity(allocation_size)
 }
