@@ -52,34 +52,29 @@ pub struct ManifoldBuilder {
 }
 
 impl ManifoldBuilder {
+    fn add_highlighter<T: Highlight + 'static>(mut self, highlighter: T) -> Self {
+        self.highlighters.push(Arc::new(highlighter));
+        self
+    }
+
     pub fn with_number_highlighter(self) -> Self {
         let highlighter = NumberHighlighter::new(cyan());
-
         self.add_highlighter(highlighter)
     }
 
     pub fn with_number_highlighter_from_style(self, style: Style) -> Self {
         let highlighter = NumberHighlighter::new(style);
-
         self.add_highlighter(highlighter)
     }
 
     pub fn with_uuid_highlighter(self) -> Self {
         let highlighter = UuidHighlighter::new(blue_and_italic(), magenta_and_italic(), red());
-
         self.add_highlighter(highlighter)
     }
 
     pub fn with_uuid_highlighter_from_style(self, number: Style, letter: Style, dash: Style) -> Self {
         let highlighter = UuidHighlighter::new(number, letter, dash);
-
         self.add_highlighter(highlighter)
-    }
-
-    fn add_highlighter<T: Highlight + 'static>(mut self, highlighter: T) -> Self {
-        self.highlighters.push(Arc::new(highlighter));
-
-        self
     }
 
     pub fn build(self) -> Manifold {
