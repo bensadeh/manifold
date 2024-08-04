@@ -19,7 +19,7 @@ impl Manifold {
         }
     }
 
-    fn builder() -> ManifoldBuilder {
+    pub fn builder() -> ManifoldBuilder {
         ManifoldBuilder {
             highlighters: Vec::new(),
         }
@@ -46,12 +46,12 @@ impl Default for Manifold {
     }
 }
 
-struct ManifoldBuilder {
+pub struct ManifoldBuilder {
     highlighters: Vec<Arc<dyn Highlight>>,
 }
 
 impl ManifoldBuilder {
-    fn with_number_highlighter(mut self) -> Self {
+    pub fn with_number_highlighter(mut self) -> Self {
         let style = Style {
             fg: Some(Color::Cyan),
             ..Style::default()
@@ -64,7 +64,7 @@ impl ManifoldBuilder {
         self
     }
 
-    fn with_number_highlighter_from_style(mut self, style: Style) -> Self {
+    pub fn with_number_highlighter_from_style(mut self, style: Style) -> Self {
         let number_highlighter = NumberHighlighter::new(style);
 
         self.highlighters.push(Arc::new(number_highlighter));
@@ -72,7 +72,7 @@ impl ManifoldBuilder {
         self
     }
 
-    fn with_uuid_highlighter(mut self) -> Self {
+    pub fn with_uuid_highlighter(mut self) -> Self {
         let number = Style {
             fg: Some(Color::Blue),
             italic: true,
@@ -95,7 +95,7 @@ impl ManifoldBuilder {
         self
     }
 
-    fn with_uuid_highlighter_from_style(mut self, number: Style, letter: Style, dash: Style) -> Self {
+    pub fn with_uuid_highlighter_from_style(mut self, number: Style, letter: Style, dash: Style) -> Self {
         let number_highlighter = UuidHighlighter::new(number, letter, dash);
 
         self.highlighters.push(Arc::new(number_highlighter));
@@ -103,7 +103,7 @@ impl ManifoldBuilder {
         self
     }
 
-    fn build(self) -> Manifold {
+    pub fn build(self) -> Manifold {
         Manifold::new().with_highlighters(self.highlighters)
     }
 }
