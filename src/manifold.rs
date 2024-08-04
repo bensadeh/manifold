@@ -1,5 +1,6 @@
 use std::sync::Arc;
 
+use crate::error::Error;
 use crate::highlighter::number::NumberHighlighter;
 use crate::highlighter::uuid::UuidHighlighter;
 use crate::split_and_apply::apply_only_to_unhighlighted;
@@ -23,6 +24,7 @@ impl Manifold {
     pub fn builder() -> ManifoldBuilder {
         ManifoldBuilder {
             highlighters: Vec::new(),
+            errors: Vec::new(),
         }
     }
 
@@ -44,40 +46,48 @@ impl Default for Manifold {
             .with_number_highlighter()
             .with_uuid_highlighter()
             .build()
+            .unwrap()
     }
 }
 
 pub struct ManifoldBuilder {
     highlighters: Vec<Arc<dyn Highlight>>,
+    errors: Vec<regex::Error>,
 }
 
 impl ManifoldBuilder {
-    fn add_highlighter<T: Highlight + 'static>(mut self, highlighter: T) -> Self {
-        self.highlighters.push(Arc::new(highlighter));
+    fn try_add_highlighter<T: Highlight + 'static>(mut self, highlighter: Result<T, regex::Error>) -> Self {
+        match highlighter {
+            Ok(h) => self.highlighters.push(Arc::new(h)),
+            Err(e) => self.errors.push(e),
+        }
         self
     }
 
     pub fn with_number_highlighter(self) -> Self {
         let highlighter = NumberHighlighter::new(cyan());
-        self.add_highlighter(highlighter)
+        self.try_add_highlighter(highlighter)
     }
 
     pub fn with_number_highlighter_from_style(self, style: Style) -> Self {
         let highlighter = NumberHighlighter::new(style);
-        self.add_highlighter(highlighter)
+        self.try_add_highlighter(highlighter)
     }
 
     pub fn with_uuid_highlighter(self) -> Self {
         let highlighter = UuidHighlighter::new(blue_and_italic(), magenta_and_italic(), red());
-        self.add_highlighter(highlighter)
+        self.try_add_highlighter(highlighter)
     }
 
     pub fn with_uuid_highlighter_from_style(self, number: Style, letter: Style, dash: Style) -> Self {
         let highlighter = UuidHighlighter::new(number, letter, dash);
-        self.add_highlighter(highlighter)
+        self.try_add_highlighter(highlighter)
     }
 
-    pub fn build(self) -> Manifold {
-        Manifold::new().with_highlighters(self.highlighters)
+    pub fn build(self) -> Result<Manifold, Error> {
+        match self.errors.is_empty() {
+            true => Ok(Manifold::new().with_highlighters(self.highlighters)),
+            false => Err(Error::HighlighterErrors(self.errors)),
+        }
     }
 }

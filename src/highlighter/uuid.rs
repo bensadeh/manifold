@@ -1,13 +1,19 @@
 use nu_ansi_term::Style as NuStyle;
-use once_cell::sync::Lazy;
-use regex::{Captures, Regex};
+use regex::{Captures, Error, Regex};
 
 use crate::manifold::Highlight;
 use crate::style::Style;
 
-static UUID_REGEX: Lazy<Regex> = Lazy::new(|| {
-    Regex::new(
-        r"(?x)
+pub struct UuidHighlighter {
+    regex: Regex,
+    number: NuStyle,
+    letter: NuStyle,
+    dash: NuStyle,
+}
+
+impl UuidHighlighter {
+    pub fn new(number: Style, letter: Style, dash: Style) -> Result<Self, Error> {
+        const UUID_REGEX: &str = r"(?x)       # Enable comments and whitespace insensitivity
             \b[0-9a-fA-F]{8}\b    # Match first segment of UUID
             -                     # Match separator
             \b[0-9a-fA-F]{4}\b    # Match second segment of UUID
@@ -17,30 +23,22 @@ static UUID_REGEX: Lazy<Regex> = Lazy::new(|| {
             \b[0-9a-fA-F]{4}\b    # Match fourth segment of UUID
             -                     # Match separator
             \b[0-9a-fA-F]{12}\b   # Match last segment of UUID
-        ",
-    )
-    .expect("Invalid UUID regex pattern")
-});
+            ";
 
-pub struct UuidHighlighter {
-    number: NuStyle,
-    letter: NuStyle,
-    dash: NuStyle,
-}
+        let regex = Regex::new(UUID_REGEX)?;
 
-impl UuidHighlighter {
-    pub fn new(number: Style, letter: Style, dash: Style) -> Self {
-        Self {
+        Ok(Self {
+            regex,
             number: number.into(),
             letter: letter.into(),
             dash: dash.into(),
-        }
+        })
     }
 }
 
 impl Highlight for UuidHighlighter {
     fn apply(&self, input: &str) -> String {
-        UUID_REGEX
+        self.regex
             .replace_all(input, |caps: &Captures<'_>| {
                 caps[0]
                     .chars()
@@ -66,7 +64,7 @@ mod tests {
 
     #[test]
     fn test_uuid_highlighter() {
-        let highlighter = UuidHighlighter::new(blue(), green(), red());
+        let highlighter = UuidHighlighter::new(blue(), green(), red()).unwrap();
 
         let cases = vec![
             (

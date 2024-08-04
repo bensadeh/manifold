@@ -1,5 +1,6 @@
 pub use manifold::Manifold;
 
+mod error;
 mod highlighter;
 pub mod manifold;
 mod split_and_apply;
@@ -22,7 +23,8 @@ mod tests {
         let manifold = Manifold::builder()
             .with_number_highlighter()
             .with_uuid_highlighter()
-            .build();
+            .build()
+            .unwrap();
 
         let actual = manifold.apply("Hello 123 world!".to_string());
         let expected = "Hello [cyan]123[reset] world!".to_string();

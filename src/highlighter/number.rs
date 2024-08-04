@@ -1,37 +1,37 @@
 use nu_ansi_term::Style as NuStyle;
-use once_cell::sync::Lazy;
-use regex::{Captures, Regex};
+use regex::{Captures, Error, Regex};
 
 use crate::manifold::Highlight;
 use crate::style::Style;
 
-static NUMBER_REGEX: Lazy<Regex> = Lazy::new(|| {
-    Regex::new(
-        r"(?x)       # Enable comments and whitespace insensitivity
+pub struct NumberHighlighter {
+    regex: Regex,
+    style: NuStyle,
+}
+
+impl NumberHighlighter {
+    pub fn new(style: Style) -> Result<Self, Error> {
+        const NUMBER_REGEX: &str = r"(?x)       # Enable comments and whitespace insensitivity
             \b       # Word boundary, ensures we are at the start of a number
             \d+      # Matches one or more digits
             (\.      # Start a group to match a decimal part
             \d+      # Matches one or more digits after the dot
             )?       # The decimal part is optional
             \b       # Word boundary, ensures we are at the end of a number
-            ",
-    )
-    .expect("Invalid regex pattern")
-});
+            ";
 
-pub struct NumberHighlighter {
-    style: NuStyle,
-}
+        let regex = Regex::new(NUMBER_REGEX)?;
 
-impl NumberHighlighter {
-    pub fn new(style: Style) -> Self {
-        Self { style: style.into() }
+        Ok(Self {
+            regex,
+            style: style.into(),
+        })
     }
 }
 
 impl Highlight for NumberHighlighter {
     fn apply(&self, input: &str) -> String {
-        NUMBER_REGEX
+        self.regex
             .replace_all(input, |caps: &Captures<'_>| format!("{}", self.style.paint(&caps[0])))
             .to_string()
     }
@@ -47,7 +47,7 @@ mod tests {
 
     #[test]
     fn test_number_highlighter() {
-        let highlighter = NumberHighlighter::new(red());
+        let highlighter = NumberHighlighter::new(red()).unwrap();
 
         let cases = vec![
             (
