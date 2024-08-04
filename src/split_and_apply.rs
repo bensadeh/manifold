@@ -1,6 +1,19 @@
 const MAX_ALLOCATION_SIZE: usize = 1024 * 1024; // 1 MiB
 
-pub fn apply_to_unhighlighted<F>(input: &str, highlight_fn: F) -> String
+/// Applies a given function to the unhighlighted parts of an input string, preserving any existing highlighted
+/// sections.
+///
+/// # Arguments
+///
+/// * `input` - A string slice that holds the input text to be processed.
+/// * `highlight_fn` - A closure or function that takes a string slice and returns a new, processed string. This
+///   function is applied only to the unhighlighted sections of the input text.
+///
+/// # Returns
+///
+/// A new `String` where the `highlight_fn` has been applied to all unhighlighted sections of the input text, while already highlighted sections remain unchanged.
+///
+pub fn apply_only_to_unhighlighted<F>(input: &str, highlight_fn: F) -> String
 where
     F: Fn(&str) -> String + Send + Sync,
 {
