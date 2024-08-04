@@ -25,7 +25,7 @@ impl Manifold {
     pub fn builder() -> ManifoldBuilder {
         ManifoldBuilder {
             highlighters: Vec::new(),
-            errors: Vec::new(),
+            regex_errors: Vec::new(),
         }
     }
 
@@ -47,7 +47,7 @@ impl Default for Manifold {
         Manifold::builder()
             .with_number_highlighter(None)
             .with_uuid_highlighter(None, None, None)
-            .with_quote_highlighter('"', None)
+            .with_quote_highlighter(None, None)
             .build()
             .expect("Default Manifold construction should never fail.")
     }
@@ -55,14 +55,14 @@ impl Default for Manifold {
 
 pub struct ManifoldBuilder {
     highlighters: Vec<Arc<dyn Highlight>>,
-    errors: Vec<regex::Error>,
+    regex_errors: Vec<regex::Error>,
 }
 
 impl ManifoldBuilder {
     fn try_add_highlighter<T: Highlight + 'static>(mut self, highlighter: Result<T, regex::Error>) -> Self {
         match highlighter {
             Ok(h) => self.highlighters.push(Arc::new(h)),
-            Err(e) => self.errors.push(e),
+            Err(e) => self.regex_errors.push(e),
         }
 
         self
@@ -80,14 +80,17 @@ impl ManifoldBuilder {
         ))
     }
 
-    pub fn with_quote_highlighter(self, quotes_token: char, quote: Option<Style>) -> Self {
-        self.try_add_highlighter(Ok(QuoteHighlighter::new(quotes_token, quote.unwrap_or(yellow()))))
+    pub fn with_quote_highlighter(self, quotes_token: Option<char>, quote: Option<Style>) -> Self {
+        self.try_add_highlighter(Ok(QuoteHighlighter::new(
+            quotes_token.unwrap_or('"'),
+            quote.unwrap_or(yellow()),
+        )))
     }
 
     pub fn build(self) -> Result<Manifold, Error> {
-        match self.errors.is_empty() {
+        match self.regex_errors.is_empty() {
             true => Ok(Manifold::new().with_highlighters(self.highlighters)),
-            false => Err(Error::RegexErrors(self.errors)),
+            false => Err(Error::RegexErrors(self.regex_errors)),
         }
     }
 }
