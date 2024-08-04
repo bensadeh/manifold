@@ -29,6 +29,12 @@ fn ansi_color_code_without_reset(style: Style) -> String {
 
 impl Highlight for QuoteHighlighter {
     fn apply(&self, input: &str) -> String {
+        let quotes_count = input.chars().filter(|&ch| ch == self.quotes_token).count();
+
+        if quotes_count % 2 != 0 {
+            return input.to_string();
+        }
+
         let mut state = OutsideQuote;
         let mut output = String::new();
 
@@ -85,28 +91,53 @@ enum State {
 
 #[cfg(test)]
 mod tests {
-    use crate::style::{red, yellow};
+    use crate::style::*;
+    use crate::tests::escape_code_converter::{ConvertEscapeCodes, ConvertHighlightCodes};
 
     use super::*;
 
     #[test]
-    fn highlight_quotes_with_ansi() {
+    fn test_multiple() {
         let highlighter = QuoteHighlighter::new('"', yellow());
 
-        let result = highlighter.apply("outside \"hello \x1b[34;42;3m42\x1b[0m world\" outside");
-        let expected = "outside \x1b[33m\"hello \x1b[34;42;3m42\x1b[0m\x1b[33m world\"\x1b[0m outside";
+        let cases = vec![
+            (
+                r#"Lorem ipsum "dolor" sit amet"#,
+                r#"Lorem ipsum [yellow]"dolor"[reset] sit amet"#,
+            ),
+            (
+                r#"Lorem ipsum dolor sit amet, consectetur adipiscing elit"#,
+                r#"Lorem ipsum dolor sit amet, consectetur adipiscing elit"#,
+            ),
+        ];
 
-        assert_eq!(result, expected);
+        for (input, expected) in cases {
+            let actual = highlighter.apply(input);
+            assert_eq!(expected, actual.convert_escape_codes());
+        }
     }
 
     #[test]
-    fn highlight_quotes_without_ansi() {
-        let highlighter = QuoteHighlighter::new('"', red());
+    fn test_no_overwrite() {
+        let highlighter = QuoteHighlighter::new('"', yellow());
 
-        let input = "outside \"hello \x1b[34;42;3m42\x1b[0m world\" outside";
-        let result = highlighter.apply(input);
-        let expected = "outside \x1b[31m\"hello \x1b[34;42;3m42\x1b[0m\x1b[31m world\"\x1b[0m outside";
+        let input = r#"Hello "abc [red]def[reset] ghi" World"#.to_string().convert_highlight_codes();
+        let expected = r#"Hello [yellow]"abc [red]def[reset][yellow] ghi"[reset] World"#;
 
-        assert_eq!(result, expected);
+        let actual = highlighter.apply(input.as_str());
+
+        assert_eq!(actual.convert_escape_codes(), expected);
+    }
+
+    #[test]
+    fn test_odd_number_of_highlight_tokens() {
+        let highlighter = QuoteHighlighter::new('"', yellow());
+
+        let input = r#"Hello "abc def ghi World"#;
+        let expected = r#"Hello "abc def ghi World"#;
+
+        let actual = highlighter.apply(input);
+
+        assert_eq!(actual.convert_escape_codes(), expected);
     }
 }
