@@ -31,6 +31,7 @@ impl Manifold {
 
     fn with_highlighters(mut self, highlighters: Vec<Arc<dyn Highlight>>) -> Self {
         self.highlighters = highlighters;
+
         self
     }
 
@@ -44,9 +45,9 @@ impl Manifold {
 impl Default for Manifold {
     fn default() -> Self {
         Manifold::builder()
-            .with_number_highlighter()
-            .with_uuid_highlighter()
-            .with_quote_highlighter()
+            .with_number_highlighter(None)
+            .with_uuid_highlighter(None, None, None)
+            .with_quote_highlighter('"', None)
             .build()
             .expect("Default Manifold construction should never fail.")
     }
@@ -67,34 +68,20 @@ impl ManifoldBuilder {
         self
     }
 
-    pub fn with_number_highlighter(self) -> Self {
-        self.try_add_highlighter(NumberHighlighter::new(cyan()))
+    pub fn with_number_highlighter(self, number: Option<Style>) -> Self {
+        self.try_add_highlighter(NumberHighlighter::new(number.unwrap_or(cyan())))
     }
 
-    pub fn with_number_highlighter_from_style(self, style: Style) -> Self {
-        self.try_add_highlighter(NumberHighlighter::new(style))
+    pub fn with_uuid_highlighter(self, number: Option<Style>, letter: Option<Style>, dash: Option<Style>) -> Self {
+        self.try_add_highlighter(UuidHighlighter::new(
+            number.unwrap_or(blue_and_italic()),
+            letter.unwrap_or(magenta_and_italic()),
+            dash.unwrap_or(red()),
+        ))
     }
 
-    pub fn with_uuid_highlighter(self) -> Self {
-        self.try_add_highlighter(UuidHighlighter::new(blue_and_italic(), magenta_and_italic(), red()))
-    }
-
-    pub fn with_uuid_highlighter_from_style(self, number: Style, letter: Style, dash: Style) -> Self {
-        self.try_add_highlighter(UuidHighlighter::new(number, letter, dash))
-    }
-
-    pub fn with_quote_highlighter(mut self) -> Self {
-        let highlighter = QuoteHighlighter::new('"', yellow());
-        self.highlighters.push(Arc::new(highlighter));
-
-        self
-    }
-
-    pub fn with_quote_highlighter_from_style(mut self, quotes_token: char, style: Style) -> Self {
-        let highlighter = QuoteHighlighter::new(quotes_token, style);
-        self.highlighters.push(Arc::new(highlighter));
-
-        self
+    pub fn with_quote_highlighter(self, quotes_token: char, quote: Option<Style>) -> Self {
+        self.try_add_highlighter(Ok(QuoteHighlighter::new(quotes_token, quote.unwrap_or(yellow()))))
     }
 
     pub fn build(self) -> Result<Manifold, Error> {
