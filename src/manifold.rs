@@ -65,23 +65,19 @@ impl ManifoldBuilder {
     }
 
     pub fn with_number_highlighter(self) -> Self {
-        let highlighter = NumberHighlighter::new(cyan());
-        self.try_add_highlighter(highlighter)
+        self.try_add_highlighter(NumberHighlighter::new(cyan()))
     }
 
     pub fn with_number_highlighter_from_style(self, style: Style) -> Self {
-        let highlighter = NumberHighlighter::new(style);
-        self.try_add_highlighter(highlighter)
+        self.try_add_highlighter(NumberHighlighter::new(style))
     }
 
     pub fn with_uuid_highlighter(self) -> Self {
-        let highlighter = UuidHighlighter::new(blue_and_italic(), magenta_and_italic(), red());
-        self.try_add_highlighter(highlighter)
+        self.try_add_highlighter(UuidHighlighter::new(blue_and_italic(), magenta_and_italic(), red()))
     }
 
     pub fn with_uuid_highlighter_from_style(self, number: Style, letter: Style, dash: Style) -> Self {
-        let highlighter = UuidHighlighter::new(number, letter, dash);
-        self.try_add_highlighter(highlighter)
+        self.try_add_highlighter(UuidHighlighter::new(number, letter, dash))
     }
 
     pub fn build(self) -> Result<Manifold, Error> {
