@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use crate::highlighter::number::NumberHighlighter;
 use crate::highlighter::uuid::UuidHighlighter;
-use crate::style::{Color, Style};
+use crate::style::{blue_and_italic, cyan, magenta_and_italic, red, Style};
 
 pub trait Highlight: Sync + Send {
     fn apply(&self, input: &str) -> String;
@@ -52,12 +52,7 @@ pub struct ManifoldBuilder {
 
 impl ManifoldBuilder {
     pub fn with_number_highlighter(mut self) -> Self {
-        let style = Style {
-            fg: Some(Color::Cyan),
-            ..Style::default()
-        };
-
-        let number_highlighter = NumberHighlighter::new(style);
+        let number_highlighter = NumberHighlighter::new(cyan());
 
         self.highlighters.push(Arc::new(number_highlighter));
 
@@ -73,22 +68,7 @@ impl ManifoldBuilder {
     }
 
     pub fn with_uuid_highlighter(mut self) -> Self {
-        let number = Style {
-            fg: Some(Color::Blue),
-            italic: true,
-            ..Style::default()
-        };
-        let letter = Style {
-            fg: Some(Color::Magenta),
-            italic: true,
-            ..Style::default()
-        };
-        let dash = Style {
-            fg: Some(Color::Red),
-            ..Style::default()
-        };
-
-        let number_highlighter = UuidHighlighter::new(number, letter, dash);
+        let number_highlighter = UuidHighlighter::new(blue_and_italic(), magenta_and_italic(), red());
 
         self.highlighters.push(Arc::new(number_highlighter));
 
@@ -106,16 +86,4 @@ impl ManifoldBuilder {
     pub fn build(self) -> Manifold {
         Manifold::new().with_highlighters(self.highlighters)
     }
-}
-
-fn main() {
-    // Using the builder to create a Manifold
-    let manifold = Manifold::builder()
-        .with_number_highlighter()
-        .with_uuid_highlighter()
-        .build();
-
-    let converted = manifold.apply("text".to_string());
-
-    println!("{}", converted);
 }

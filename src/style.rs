@@ -109,3 +109,19 @@ pub(crate) fn blue() -> Style {
         ..Style::default()
     }
 }
+
+pub(crate) fn blue_and_italic() -> Style {
+    Style {
+        fg: Some(Color::Blue),
+        italic: true,
+        ..Style::default()
+    }
+}
+
+pub(crate) fn magenta_and_italic() -> Style {
+    Style {
+        fg: Some(Color::Magenta),
+        italic: true,
+        ..Style::default()
+    }
+}
