@@ -87,7 +87,7 @@ impl ManifoldBuilder {
     pub fn build(self) -> Result<Manifold, Error> {
         match self.errors.is_empty() {
             true => Ok(Manifold::new().with_highlighters(self.highlighters)),
-            false => Err(Error::HighlighterErrors(self.errors)),
+            false => Err(Error::RegexErrors(self.errors)),
         }
     }
 }
