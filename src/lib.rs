@@ -1,11 +1,13 @@
+pub use crate::config::*;
 pub use crate::error::Error;
-pub use crate::manifold::Highlighter;
+pub use crate::highlighter::Highlighter;
 pub use crate::style::Color;
 pub use crate::style::Style;
 
+pub mod config;
 mod error;
-mod highlighter;
-pub mod manifold;
+pub mod highlighter;
+mod highlighters;
 mod split_and_apply;
 pub mod style;
 

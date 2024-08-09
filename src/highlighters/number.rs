@@ -1,8 +1,8 @@
 use nu_ansi_term::Style as NuStyle;
 use regex::{Captures, Error, Regex};
 
-use crate::manifold::Highlight;
-use crate::style::Style;
+use crate::highlighter::Highlight;
+use crate::NumberConfig;
 
 pub struct NumberHighlighter {
     regex: Regex,
@@ -10,7 +10,7 @@ pub struct NumberHighlighter {
 }
 
 impl NumberHighlighter {
-    pub fn new(style: Style) -> Result<Self, Error> {
+    pub fn new(config: NumberConfig) -> Result<Self, Error> {
         const NUMBER_REGEX: &str = r"(?x)       # Enable comments and whitespace insensitivity
             \b       # Word boundary, ensures we are at the start of a number
             \d+      # Matches one or more digits
@@ -24,7 +24,7 @@ impl NumberHighlighter {
 
         Ok(Self {
             regex,
-            style: style.into(),
+            style: config.number.into(),
         })
     }
 }
@@ -39,7 +39,7 @@ impl Highlight for NumberHighlighter {
 
 #[cfg(test)]
 mod tests {
-    use crate::manifold::Highlight;
+    use crate::highlighter::Highlight;
     use crate::style::red;
     use crate::tests::escape_code_converter::ConvertEscapeCodes;
 
@@ -47,7 +47,7 @@ mod tests {
 
     #[test]
     fn test_number_highlighter() {
-        let highlighter = NumberHighlighter::new(red()).unwrap();
+        let highlighter = NumberHighlighter::new(NumberConfig { number: red() }).unwrap();
 
         let cases = vec![
             (

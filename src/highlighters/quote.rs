@@ -1,8 +1,9 @@
 use nu_ansi_term::Style as NuStyle;
 
-use crate::highlighter::quote::State::{InsideQuote, OutsideQuote};
-use crate::manifold::Highlight;
+use crate::highlighter::Highlight;
+use crate::highlighters::quote::State::{InsideQuote, OutsideQuote};
 use crate::style::Style;
+use crate::QuoteConfig;
 
 const RESET: &str = "\x1b[0m";
 
@@ -12,10 +13,12 @@ pub struct QuoteHighlighter {
 }
 
 impl QuoteHighlighter {
-    pub fn new(quotes_token: char, style: Style) -> Self {
+    pub fn new(config: QuoteConfig) -> Self {
+        let color = ansi_color_code_without_reset(config.color);
+
         Self {
-            quotes_token,
-            color: ansi_color_code_without_reset(style),
+            quotes_token: config.quotes_token,
+            color,
         }
     }
 }
@@ -98,7 +101,10 @@ mod tests {
 
     #[test]
     fn test_multiple() {
-        let highlighter = QuoteHighlighter::new('"', yellow());
+        let highlighter = QuoteHighlighter::new(QuoteConfig {
+            quotes_token: '"',
+            color: yellow(),
+        });
 
         let cases = vec![
             (
@@ -119,7 +125,10 @@ mod tests {
 
     #[test]
     fn test_no_overwrite() {
-        let highlighter = QuoteHighlighter::new('"', yellow());
+        let highlighter = QuoteHighlighter::new(QuoteConfig {
+            quotes_token: '"',
+            color: yellow(),
+        });
 
         let input = r#"Hello "abc [red]def[reset] ghi" World"#.to_string().convert_highlight_codes();
         let expected = r#"Hello [yellow]"abc [red]def[reset][yellow] ghi"[reset] World"#;
@@ -131,7 +140,10 @@ mod tests {
 
     #[test]
     fn test_odd_number_of_highlight_tokens() {
-        let highlighter = QuoteHighlighter::new('"', yellow());
+        let highlighter = QuoteHighlighter::new(QuoteConfig {
+            quotes_token: '"',
+            color: yellow(),
+        });
 
         let input = r#"Hello "abc def ghi World"#;
         let expected = r#"Hello "abc def ghi World"#;

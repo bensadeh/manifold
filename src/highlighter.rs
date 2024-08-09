@@ -1,11 +1,10 @@
-use std::sync::Arc;
-
+use crate::config::*;
 use crate::error::Error;
-use crate::highlighter::number::NumberHighlighter;
-use crate::highlighter::quote::QuoteHighlighter;
-use crate::highlighter::uuid::UuidHighlighter;
+use crate::highlighters::number::NumberHighlighter;
+use crate::highlighters::quote::QuoteHighlighter;
+use crate::highlighters::uuid::UuidHighlighter;
 use crate::split_and_apply::apply_only_to_unhighlighted;
-use crate::style::*;
+use std::sync::Arc;
 
 pub trait Highlight: Sync + Send {
     fn apply(&self, input: &str) -> String;
@@ -45,9 +44,9 @@ impl Highlighter {
 impl Default for Highlighter {
     fn default() -> Self {
         Highlighter::builder()
-            .with_number_highlighter(None)
-            .with_uuid_highlighter(None, None, None)
-            .with_quote_highlighter(None, None)
+            .with_number_highlighter(NumberConfig::default())
+            .with_uuid_highlighter(UuidConfig::default())
+            .with_quote_highlighter(QuoteConfig::default())
             .build()
             .expect("Default Manifold construction should never fail.")
     }
@@ -68,23 +67,16 @@ impl HighlightBuilder {
         self
     }
 
-    pub fn with_number_highlighter(self, number: Option<Style>) -> Self {
-        self.try_add_highlighter(NumberHighlighter::new(number.unwrap_or(cyan())))
+    pub fn with_number_highlighter(self, config: NumberConfig) -> Self {
+        self.try_add_highlighter(NumberHighlighter::new(config))
     }
 
-    pub fn with_uuid_highlighter(self, number: Option<Style>, letter: Option<Style>, dash: Option<Style>) -> Self {
-        self.try_add_highlighter(UuidHighlighter::new(
-            number.unwrap_or(blue_and_italic()),
-            letter.unwrap_or(magenta_and_italic()),
-            dash.unwrap_or(red()),
-        ))
+    pub fn with_uuid_highlighter(self, config: UuidConfig) -> Self {
+        self.try_add_highlighter(UuidHighlighter::new(config))
     }
 
-    pub fn with_quote_highlighter(self, quotes_token: Option<char>, quote: Option<Style>) -> Self {
-        self.try_add_highlighter(Ok(QuoteHighlighter::new(
-            quotes_token.unwrap_or('"'),
-            quote.unwrap_or(yellow()),
-        )))
+    pub fn with_quote_highlighter(self, config: QuoteConfig) -> Self {
+        self.try_add_highlighter(Ok(QuoteHighlighter::new(config)))
     }
 
     pub fn build(self) -> Result<Highlighter, Error> {

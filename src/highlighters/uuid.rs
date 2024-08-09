@@ -1,8 +1,8 @@
 use nu_ansi_term::Style as NuStyle;
 use regex::{Captures, Error, Regex};
 
-use crate::manifold::Highlight;
-use crate::style::Style;
+use crate::highlighter::Highlight;
+use crate::UuidConfig;
 
 pub struct UuidHighlighter {
     regex: Regex,
@@ -12,7 +12,7 @@ pub struct UuidHighlighter {
 }
 
 impl UuidHighlighter {
-    pub fn new(number: Style, letter: Style, dash: Style) -> Result<Self, Error> {
+    pub fn new(config: UuidConfig) -> Result<Self, Error> {
         const UUID_REGEX: &str = r"(?x)       # Enable comments and whitespace insensitivity
             \b[0-9a-fA-F]{8}\b    # Match first segment of UUID
             -                     # Match separator
@@ -29,9 +29,9 @@ impl UuidHighlighter {
 
         Ok(Self {
             regex,
-            number: number.into(),
-            letter: letter.into(),
-            dash: dash.into(),
+            number: config.number.into(),
+            letter: config.letter.into(),
+            dash: config.dash.into(),
         })
     }
 }
@@ -56,7 +56,7 @@ impl Highlight for UuidHighlighter {
 
 #[cfg(test)]
 mod tests {
-    use crate::manifold::Highlight;
+    use crate::highlighter::Highlight;
     use crate::style::{blue, green, red};
     use crate::tests::escape_code_converter::ConvertEscapeCodes;
 
@@ -64,7 +64,12 @@ mod tests {
 
     #[test]
     fn test_uuid_highlighter() {
-        let highlighter = UuidHighlighter::new(blue(), green(), red()).unwrap();
+        let highlighter = UuidHighlighter::new(UuidConfig {
+            number: blue(),
+            letter: green(),
+            dash: red(),
+        })
+        .unwrap();
 
         let cases = vec![
             (

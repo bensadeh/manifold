@@ -1,7 +1,7 @@
 use std::cmp::min;
 use std::sync::Arc;
 
-use crate::manifold::Highlight;
+use crate::highlighter::Highlight;
 
 const FOUR_KB: usize = 4 * 1024; // 4 KiB
 
