@@ -50,7 +50,7 @@ impl Default for Highlighter {
             .with_uuid_highlighter(UuidConfig::default())
             .with_quote_highlighter(QuoteConfig::default())
             .build()
-            .expect("Default Manifold construction should never fail.")
+            .expect("Default constructor should never fail")
     }
 }
 

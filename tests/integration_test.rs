@@ -1,6 +1,13 @@
 use inlet_manifold::Highlighter;
 
 #[test]
+fn default_constructor_should_not_panic() {
+    let result = std::panic::catch_unwind(Highlighter::default);
+
+    assert!(result.is_ok(), "Default constructor should never fail");
+}
+
+#[test]
 fn it_works() {
     let highlighter = Highlighter::default();
 
