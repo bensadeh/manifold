@@ -1,20 +1,24 @@
 use crate::{KeywordConfig, Style};
 use std::collections::HashMap;
-use std::hash::Hash;
 
 fn normalize_keyword_configs(configs: Vec<KeywordConfig>) -> Vec<KeywordConfig> {
     let mut grouped_configs: HashMap<Style, Vec<String>> = HashMap::new();
 
     for config in configs {
-        grouped_configs
-            .entry(config.style)
-            .or_insert_with(Vec::new)
-            .extend(config.words);
+        grouped_configs.entry(config.style).or_default().extend(config.words);
     }
 
     grouped_configs
         .into_iter()
-        .map(|(style, words)| KeywordConfig { words, style })
+        .map(|(style, words)| {
+            let mut sorted_words = words;
+            sorted_words.sort();
+
+            KeywordConfig {
+                words: sorted_words,
+                style,
+            }
+        })
         .collect()
 }
 
@@ -56,10 +60,10 @@ mod tests {
         let expected = vec![
             KeywordConfig {
                 words: vec![
+                    "bar".to_string(),
+                    "foo".to_string(),
                     "hello".to_string(),
                     "world".to_string(),
-                    "foo".to_string(),
-                    "bar".to_string(),
                 ],
                 style: Style {
                     fg: Some(Red),
