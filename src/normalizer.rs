@@ -21,6 +21,7 @@ pub fn normalize_keyword_configs(configs: Vec<KeywordConfig>) -> Vec<KeywordConf
         .collect();
 
     result.sort_by(|a, b| a.style.cmp(&b.style));
+
     result
 }
 
