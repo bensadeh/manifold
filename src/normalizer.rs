@@ -22,6 +22,7 @@ fn normalize_keyword_configs(configs: Vec<KeywordConfig>) -> Vec<KeywordConfig> 
 mod tests {
     use super::*;
     use crate::Color::*;
+    use std::default::Default;
 
     #[test]
     fn test_normalize_keyword_configs() {
@@ -30,33 +31,24 @@ mod tests {
                 words: vec!["hello".to_string(), "world".to_string()],
                 style: Style {
                     fg: Some(Red),
-                    bg: None,
                     bold: true,
-                    faint: false,
-                    italic: false,
-                    underline: false,
+                    ..Style::default()
                 },
             },
             KeywordConfig {
                 words: vec!["foo".to_string(), "bar".to_string()],
                 style: Style {
                     fg: Some(Red),
-                    bg: None,
                     bold: true,
-                    faint: false,
-                    italic: false,
-                    underline: false,
+                    ..Style::default()
                 },
             },
             KeywordConfig {
                 words: vec!["baz".to_string()],
                 style: Style {
                     fg: Some(Green),
-                    bg: None,
-                    bold: false,
-                    faint: false,
-                    italic: false,
                     underline: true,
+                    ..Style::default()
                 },
             },
         ];
@@ -71,28 +63,22 @@ mod tests {
                 ],
                 style: Style {
                     fg: Some(Red),
-                    bg: None,
                     bold: true,
-                    faint: false,
-                    italic: false,
-                    underline: false,
+                    ..Style::default()
                 },
             },
             KeywordConfig {
                 words: vec!["baz".to_string()],
                 style: Style {
                     fg: Some(Green),
-                    bg: None,
-                    bold: false,
-                    faint: false,
-                    italic: false,
                     underline: true,
+                    ..Style::default()
                 },
             },
         ];
 
-        let normalized_configs = normalize_keyword_configs(configs);
-        assert_eq!(normalized_configs, expected);
+        let actual = normalize_keyword_configs(configs);
+        assert_eq!(actual, expected);
     }
 
     #[test]
@@ -109,11 +95,8 @@ mod tests {
             words: vec!["unique".to_string()],
             style: Style {
                 fg: Some(Blue),
-                bg: None,
-                bold: false,
-                faint: false,
                 italic: true,
-                underline: false,
+                ..Style::default()
             },
         }];
 
@@ -121,11 +104,8 @@ mod tests {
             words: vec!["unique".to_string()],
             style: Style {
                 fg: Some(Blue),
-                bg: None,
-                bold: false,
-                faint: false,
                 italic: true,
-                underline: false,
+                ..Style::default()
             },
         }];
 
