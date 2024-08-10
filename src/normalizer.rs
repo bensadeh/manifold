@@ -1,7 +1,7 @@
 use crate::{KeywordConfig, Style};
 use std::collections::HashMap;
 
-fn normalize_keyword_configs(configs: Vec<KeywordConfig>) -> Vec<KeywordConfig> {
+pub fn normalize_keyword_configs(configs: Vec<KeywordConfig>) -> Vec<KeywordConfig> {
     let mut grouped_configs: HashMap<Style, Vec<String>> = HashMap::new();
 
     for config in configs {

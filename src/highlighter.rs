@@ -4,6 +4,7 @@ use crate::highlighters::keyword::KeywordHighlighter;
 use crate::highlighters::number::NumberHighlighter;
 use crate::highlighters::quote::QuoteHighlighter;
 use crate::highlighters::uuid::UuidHighlighter;
+use crate::normalizer::normalize_keyword_configs;
 use crate::split_and_apply::apply_only_to_unhighlighted;
 use std::sync::Arc;
 
@@ -72,7 +73,9 @@ impl HighlightBuilder {
     }
 
     pub fn with_keyword_highlighter(mut self, keyword_configs: Vec<KeywordConfig>) -> Self {
-        for keyword_config in keyword_configs {
+        let normalized_keyword_configs = normalize_keyword_configs(keyword_configs);
+
+        for keyword_config in normalized_keyword_configs {
             let highlighter = KeywordHighlighter::new(keyword_config);
 
             match highlighter {
