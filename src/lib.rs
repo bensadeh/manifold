@@ -8,6 +8,7 @@ pub mod config;
 mod error;
 pub mod highlighter;
 mod highlighters;
+mod normalizer;
 mod split_and_apply;
 pub mod style;
 

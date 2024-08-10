@@ -41,6 +41,7 @@ impl Default for QuoteConfig {
     }
 }
 
+#[derive(PartialEq, Eq, Debug)]
 pub struct KeywordConfig {
     pub words: Vec<String>,
     pub style: Style,
