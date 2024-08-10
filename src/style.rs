@@ -82,13 +82,6 @@ impl From<Style> for NuStyle {
     }
 }
 
-pub(crate) fn green() -> Style {
-    Style {
-        fg: Some(Color::Green),
-        ..Style::default()
-    }
-}
-
 pub(crate) fn yellow() -> Style {
     Style {
         fg: Some(Color::Yellow),
@@ -106,13 +99,6 @@ pub(crate) fn cyan() -> Style {
 pub(crate) fn red() -> Style {
     Style {
         fg: Some(Color::Red),
-        ..Style::default()
-    }
-}
-
-pub(crate) fn blue() -> Style {
-    Style {
-        fg: Some(Color::Blue),
         ..Style::default()
     }
 }

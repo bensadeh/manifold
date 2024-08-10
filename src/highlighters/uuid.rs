@@ -57,7 +57,7 @@ impl Highlight for UuidHighlighter {
 #[cfg(test)]
 mod tests {
     use crate::highlighter::Highlight;
-    use crate::style::{blue, green, red};
+    use crate::style::*;
     use crate::tests::escape_code_converter::ConvertEscapeCodes;
 
     use super::*;
@@ -65,8 +65,8 @@ mod tests {
     #[test]
     fn test_uuid_highlighter() {
         let highlighter = UuidHighlighter::new(UuidConfig {
-            number: blue(),
-            letter: green(),
+            number: cyan(),
+            letter: yellow(),
             dash: red(),
         })
         .unwrap();
@@ -74,11 +74,11 @@ mod tests {
         let cases = vec![
             (
                 "The UUID is 123e4567-e89b-12d3-a456-426614174000.",
-                "The UUID is [blue]1[reset][blue]2[reset][blue]3[reset][green]e[reset][blue]4[reset][blue]5[reset][blue]6[reset][blue]7[reset][red]-[reset][green]e[reset][blue]8[reset][blue]9[reset][green]b[reset][red]-[reset][blue]1[reset][blue]2[reset][green]d[reset][blue]3[reset][red]-[reset][green]a[reset][blue]4[reset][blue]5[reset][blue]6[reset][red]-[reset][blue]4[reset][blue]2[reset][blue]6[reset][blue]6[reset][blue]1[reset][blue]4[reset][blue]1[reset][blue]7[reset][blue]4[reset][blue]0[reset][blue]0[reset][blue]0[reset]."
+                "The UUID is [cyan]1[reset][cyan]2[reset][cyan]3[reset][yellow]e[reset][cyan]4[reset][cyan]5[reset][cyan]6[reset][cyan]7[reset][red]-[reset][yellow]e[reset][cyan]8[reset][cyan]9[reset][yellow]b[reset][red]-[reset][cyan]1[reset][cyan]2[reset][yellow]d[reset][cyan]3[reset][red]-[reset][yellow]a[reset][cyan]4[reset][cyan]5[reset][cyan]6[reset][red]-[reset][cyan]4[reset][cyan]2[reset][cyan]6[reset][cyan]6[reset][cyan]1[reset][cyan]4[reset][cyan]1[reset][cyan]7[reset][cyan]4[reset][cyan]0[reset][cyan]0[reset][cyan]0[reset]."
             ),
             (
                 "Another UUID is f47ac10b-58cc-4372-a567-0e02b2c3d479.",
-                "Another UUID is [green]f[reset][blue]4[reset][blue]7[reset][green]a[reset][green]c[reset][blue]1[reset][blue]0[reset][green]b[reset][red]-[reset][blue]5[reset][blue]8[reset][green]c[reset][green]c[reset][red]-[reset][blue]4[reset][blue]3[reset][blue]7[reset][blue]2[reset][red]-[reset][green]a[reset][blue]5[reset][blue]6[reset][blue]7[reset][red]-[reset][blue]0[reset][green]e[reset][blue]0[reset][blue]2[reset][green]b[reset][blue]2[reset][green]c[reset][blue]3[reset][green]d[reset][blue]4[reset][blue]7[reset][blue]9[reset]."
+                "Another UUID is [yellow]f[reset][cyan]4[reset][cyan]7[reset][yellow]a[reset][yellow]c[reset][cyan]1[reset][cyan]0[reset][yellow]b[reset][red]-[reset][cyan]5[reset][cyan]8[reset][yellow]c[reset][yellow]c[reset][red]-[reset][cyan]4[reset][cyan]3[reset][cyan]7[reset][cyan]2[reset][red]-[reset][yellow]a[reset][cyan]5[reset][cyan]6[reset][cyan]7[reset][red]-[reset][cyan]0[reset][yellow]e[reset][cyan]0[reset][cyan]2[reset][yellow]b[reset][cyan]2[reset][yellow]c[reset][cyan]3[reset][yellow]d[reset][cyan]4[reset][cyan]7[reset][cyan]9[reset]."
             ),
             (
                 "No UUID here!",
