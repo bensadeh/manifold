@@ -2,7 +2,7 @@
   <img src="assets/manifold.png" width="230"/>
 </p>
 
-#                                                                                                                                                                                                                                                                                                                         
+#                                                                                                                                                                                                                                                                                                                                   
 
 <p align="center">
 A general purpose highlighting library 
@@ -29,3 +29,19 @@ If you're just interested in a cli for highlighting text, see [`tailspin`](https
 - Key Value pairs
 - Pointer Addresses
 - Unix Processes
+
+### Example
+
+```rust
+use inlet_manifold::*;
+
+fn main() {
+    let highlighter = Highlighter::default();
+
+    let input = "Hello 42 world".to_string();
+    let output = highlighter.apply(input);
+
+    println!("{}", input);  // "Hello 42 world"
+    println!("{}", output); // "Hello \u{1b}[36m42\u{1b}[0m world!"
+}
+```
