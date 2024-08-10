@@ -1,6 +1,6 @@
 use nu_ansi_term::{Color as NuColor, Style as NuStyle};
 
-#[derive(PartialEq, Eq, Hash, Debug, Clone, Default)]
+#[derive(PartialEq, Eq, Ord, PartialOrd, Hash, Debug, Clone, Default)]
 pub struct Style {
     pub fg: Option<Color>,
     pub bg: Option<Color>,
@@ -10,7 +10,7 @@ pub struct Style {
     pub underline: bool,
 }
 
-#[derive(PartialEq, Eq, Hash, Debug, Clone)]
+#[derive(PartialEq, Eq, Ord, PartialOrd, Hash, Debug, Clone)]
 pub enum Color {
     Black,
     DarkGray,

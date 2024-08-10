@@ -8,18 +8,20 @@ fn normalize_keyword_configs(configs: Vec<KeywordConfig>) -> Vec<KeywordConfig> 
         grouped_configs.entry(config.style).or_default().extend(config.words);
     }
 
-    grouped_configs
+    let mut result: Vec<KeywordConfig> = grouped_configs
         .into_iter()
         .map(|(style, words)| {
-            let mut sorted_words = words;
+            let mut sorted_words = words.clone();
             sorted_words.sort();
-
             KeywordConfig {
                 words: sorted_words,
                 style,
             }
         })
-        .collect()
+        .collect();
+
+    result.sort_by(|a, b| a.style.cmp(&b.style));
+    result
 }
 
 #[cfg(test)]
