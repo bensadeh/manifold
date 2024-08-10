@@ -3,9 +3,9 @@ name = "inlet_manifold"
 version = "0.1.0"
 edition = "2021"
 authors = ["Ben Sadeh"]
-description = "A highlighting library"
+description = "A general purpose highlighting library"
 repository = "https://github.com/bensadeh/manifold"
-keywords = ["highlighting", "syntax-highlighting", "tailspin"]
+keywords = ["highlighting", "regex", "tailspin"]
 license = "MIT"
 
 [lib]
