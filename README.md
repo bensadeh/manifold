@@ -2,7 +2,7 @@
   <img src="assets/manifold.png" width="230"/>
 </p>
 
-#                                                                                                                                                                                                                                                                                                                      
+#                                                                                                                                                                                                                                                                                                                         
 
 <p align="center">
 A general purpose highlighting library 
@@ -18,7 +18,7 @@ If you're just interested in a cli for highlighting text, see [`tailspin`](https
 
 ### Supported Highlight Groups
 
-- Keywords
+- Custom keywords
 - Numbers
 - UUIDs
 - URLs
