@@ -40,3 +40,8 @@ impl Default for QuoteConfig {
         }
     }
 }
+
+pub struct KeywordConfig {
+    pub words: Vec<String>,
+    pub style: Style,
+}

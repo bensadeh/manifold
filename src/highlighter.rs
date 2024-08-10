@@ -1,5 +1,6 @@
 use crate::config::*;
 use crate::error::Error;
+use crate::highlighters::keyword::KeywordHighlighter;
 use crate::highlighters::number::NumberHighlighter;
 use crate::highlighters::quote::QuoteHighlighter;
 use crate::highlighters::uuid::UuidHighlighter;
@@ -58,15 +59,6 @@ pub struct HighlightBuilder {
 }
 
 impl HighlightBuilder {
-    fn try_add_highlighter<T: Highlight + 'static>(mut self, highlighter: Result<T, regex::Error>) -> Self {
-        match highlighter {
-            Ok(h) => self.highlighters.push(Arc::new(h)),
-            Err(e) => self.regex_errors.push(e),
-        }
-
-        self
-    }
-
     pub fn with_number_highlighter(self, config: NumberConfig) -> Self {
         self.try_add_highlighter(NumberHighlighter::new(config))
     }
@@ -77,6 +69,28 @@ impl HighlightBuilder {
 
     pub fn with_quote_highlighter(self, config: QuoteConfig) -> Self {
         self.try_add_highlighter(Ok(QuoteHighlighter::new(config)))
+    }
+
+    pub fn with_keyword_highlighter(mut self, keyword_configs: Vec<KeywordConfig>) -> Self {
+        for keyword_config in keyword_configs {
+            let highlighter = KeywordHighlighter::new(keyword_config);
+
+            match highlighter {
+                Ok(h) => self.highlighters.push(Arc::new(h)),
+                Err(e) => self.regex_errors.push(e),
+            }
+        }
+
+        self
+    }
+
+    fn try_add_highlighter<T: Highlight + 'static>(mut self, highlighter: Result<T, regex::Error>) -> Self {
+        match highlighter {
+            Ok(h) => self.highlighters.push(Arc::new(h)),
+            Err(e) => self.regex_errors.push(e),
+        }
+
+        self
     }
 
     pub fn build(self) -> Result<Highlighter, Error> {
