@@ -28,6 +28,7 @@ pub fn normalize_keyword_configs(configs: Vec<KeywordConfig>) -> Vec<KeywordConf
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::style::red;
     use crate::Color::*;
     use std::default::Default;
 
@@ -92,6 +93,72 @@ mod tests {
     fn test_normalize_keyword_configs_empty() {
         let configs: Vec<KeywordConfig> = vec![];
         let expected: Vec<KeywordConfig> = vec![];
+        let normalized_configs = normalize_keyword_configs(configs);
+        assert_eq!(normalized_configs, expected);
+    }
+
+    #[test]
+    fn test_normalize_keyword_simple_grouping() {
+        let configs = vec![
+            KeywordConfig {
+                words: vec!["error".to_string()],
+                style: red(),
+            },
+            KeywordConfig {
+                words: vec!["null".to_string()],
+                style: red(),
+            },
+        ];
+
+        let expected = vec![KeywordConfig {
+            words: vec!["error".to_string(), "null".to_string()],
+            style: red(),
+        }];
+
+        let normalized_configs = normalize_keyword_configs(configs);
+        assert_eq!(normalized_configs, expected);
+    }
+
+    #[test]
+    fn test_do_not_normalize_slightly_different_groupings() {
+        let configs = vec![
+            KeywordConfig {
+                words: vec!["error".to_string()],
+                style: Style {
+                    fg: Some(Red),
+                    bold: true,
+                    ..Style::default()
+                },
+            },
+            KeywordConfig {
+                words: vec!["null".to_string()],
+                style: Style {
+                    fg: Some(Red),
+                    italic: true,
+                    ..Style::default()
+                },
+            },
+        ];
+
+        let expected = vec![
+            KeywordConfig {
+                words: vec!["null".to_string()],
+                style: Style {
+                    fg: Some(Red),
+                    italic: true,
+                    ..Style::default()
+                },
+            },
+            KeywordConfig {
+                words: vec!["error".to_string()],
+                style: Style {
+                    fg: Some(Red),
+                    bold: true,
+                    ..Style::default()
+                },
+            },
+        ];
+
         let normalized_configs = normalize_keyword_configs(configs);
         assert_eq!(normalized_configs, expected);
     }
