@@ -103,6 +103,13 @@ pub(crate) fn red() -> Style {
     }
 }
 
+pub(crate) fn red_background() -> Style {
+    Style {
+        bg: Some(Color::Red),
+        ..Style::default()
+    }
+}
+
 pub(crate) fn blue_and_italic() -> Style {
     Style {
         fg: Some(Color::Blue),

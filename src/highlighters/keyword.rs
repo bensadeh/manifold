@@ -42,3 +42,58 @@ impl Highlight for KeywordHighlighter {
             .to_string()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::highlighter::Highlight;
+    use crate::style::*;
+    use crate::tests::escape_code_converter::ConvertEscapeCodes;
+
+    use super::*;
+
+    #[test]
+    fn test_foreground_keyword_highlighter() {
+        let config = KeywordConfig {
+            words: vec!["null".to_string()],
+            style: red(),
+        };
+        let highlighter = KeywordHighlighter::new(config).unwrap();
+
+        let cases = vec![
+            ("Hello null world", "Hello [red]null[reset] world"),
+            (
+                "There are 1001 nights in the tale.",
+                "There are 1001 nights in the tale.",
+            ),
+            ("No numbers here!", "No numbers here!"),
+        ];
+
+        for (input, expected) in cases {
+            let actual = highlighter.apply(input);
+            assert_eq!(expected, actual.convert_escape_codes());
+        }
+    }
+
+    #[test]
+    fn test_background_keyword_highlighter() {
+        let config = KeywordConfig {
+            words: vec!["null".to_string()],
+            style: red_background(),
+        };
+        let highlighter = KeywordHighlighter::new(config).unwrap();
+
+        let cases = vec![
+            ("Hello null world", "Hello [bg_red] null [reset] world"),
+            (
+                "There are 1001 nights in the tale.",
+                "There are 1001 nights in the tale.",
+            ),
+            ("No numbers here!", "No numbers here!"),
+        ];
+
+        for (input, expected) in cases {
+            let actual = highlighter.apply(input);
+            assert_eq!(expected, actual.convert_escape_codes());
+        }
+    }
+}
