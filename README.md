@@ -2,13 +2,13 @@
   <img src="assets/manifold.png" width="230"/>
 </p>
 
-#                                                                                                                                                                                                                                                                                                                                   
+#                                                                                                                                                                                                                                                                                                                                    
 
 <p align="center">
 A general purpose highlighting library 
 </p>
 
-### Overview
+## Overview
 
 `manifold` is a general-purpose highlighting engine for highlighting common objects such as dates, numbers, keywords,
 and UUIDs. It works by surrounding these items with ANSI color codes, enabling them to be displayed in color in the
@@ -16,7 +16,7 @@ terminal.
 
 If you're just interested in a cli for highlighting text, see [`tailspin`](https://github.com/bensadeh/tailspin).
 
-### Supported Highlight Groups
+## Supported Highlight Groups
 
 - Custom keywords
 - Numbers
@@ -30,7 +30,7 @@ If you're just interested in a cli for highlighting text, see [`tailspin`](https
 - Pointer Addresses
 - Unix Processes
 
-### Example
+## Example
 
 ```rust
 use inlet_manifold::*;
