@@ -2,7 +2,7 @@
   <img src="assets/manifold.png" width="230"/>
 </p>
 
-#                                                                                                                                                                                                                                                                                                                                                                  
+#                                                                                                                                                                                                                                                                                                                                                                   
 
 <p align="center">
 A general purpose highlighting library 
@@ -14,7 +14,7 @@ A general purpose highlighting library
 UUIDs and more. It works by surrounding these items with ANSI color codes, enabling them to be displayed in color in the
 terminal.
 
-If you're just interested in a cli for highlighting text, see [`tailspin`](https://github.com/bensadeh/tailspin).
+`manifold` is the highlighting engine powering [`tailspin`](https://github.com/bensadeh/tailspin).
 
 ## Supported Highlight Groups
 
