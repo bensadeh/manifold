@@ -27,6 +27,20 @@ impl Default for UuidConfig {
     }
 }
 
+pub struct UnixPathConfig {
+    pub segment: Style,
+    pub separator: Style,
+}
+
+impl Default for UnixPathConfig {
+    fn default() -> Self {
+        UnixPathConfig {
+            segment: green(),
+            separator: yellow(),
+        }
+    }
+}
+
 pub struct QuoteConfig {
     pub quotes_token: char,
     pub color: Style,

@@ -3,6 +3,7 @@ use crate::error::Error;
 use crate::highlighters::keyword::KeywordHighlighter;
 use crate::highlighters::number::NumberHighlighter;
 use crate::highlighters::quote::QuoteHighlighter;
+use crate::highlighters::unix_path::UnixPathHighlighter;
 use crate::highlighters::uuid::UuidHighlighter;
 use crate::normalizer::normalize_keyword_configs;
 use crate::split_and_apply::apply_only_to_unhighlighted;
@@ -56,6 +57,7 @@ impl Default for Highlighter {
             .with_number_highlighter(NumberConfig::default())
             .with_uuid_highlighter(UuidConfig::default())
             .with_quote_highlighter(QuoteConfig::default())
+            .with_unix_path_highlighter(UnixPathConfig::default())
             .build()
             .expect("Default constructor should never fail")
     }
@@ -73,6 +75,10 @@ impl HighlightBuilder {
 
     pub fn with_uuid_highlighter(self, config: UuidConfig) -> Self {
         self.try_add_highlighter(UuidHighlighter::new(config))
+    }
+
+    pub fn with_unix_path_highlighter(self, config: UnixPathConfig) -> Self {
+        self.try_add_highlighter(UnixPathHighlighter::new(config))
     }
 
     pub fn with_quote_highlighter(self, config: QuoteConfig) -> Self {

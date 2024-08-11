@@ -90,6 +90,13 @@ pub(crate) fn yellow() -> Style {
     }
 }
 
+pub(crate) fn green() -> Style {
+    Style {
+        fg: Some(Color::Green),
+        ..Style::default()
+    }
+}
+
 pub(crate) fn cyan() -> Style {
     Style {
         fg: Some(Color::Cyan),

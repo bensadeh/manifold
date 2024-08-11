@@ -11,16 +11,16 @@ pub struct NumberHighlighter {
 
 impl NumberHighlighter {
     pub fn new(config: NumberConfig) -> Result<Self, Error> {
-        const NUMBER_REGEX: &str = r"(?x)       # Enable comments and whitespace insensitivity
+        let regex = Regex::new(
+            r"(?x)   # Enable comments and whitespace insensitivity
             \b       # Word boundary, ensures we are at the start of a number
             \d+      # Matches one or more digits
             (\.      # Start a group to match a decimal part
             \d+      # Matches one or more digits after the dot
             )?       # The decimal part is optional
             \b       # Word boundary, ensures we are at the end of a number
-            ";
-
-        let regex = Regex::new(NUMBER_REGEX)?;
+            ",
+        )?;
 
         Ok(Self {
             regex,
