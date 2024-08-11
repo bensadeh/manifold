@@ -27,6 +27,26 @@ impl Default for UuidConfig {
     }
 }
 
+pub struct KeyValueConfig {
+    pub key: Style,
+    pub separator: Style,
+}
+
+impl Default for KeyValueConfig {
+    fn default() -> Self {
+        KeyValueConfig {
+            key: Style {
+                faint: true,
+                ..Style::default()
+            },
+            separator: Style {
+                fg: Some(Color::White),
+                ..Style::default()
+            },
+        }
+    }
+}
+
 pub struct UnixPathConfig {
     pub segment: Style,
     pub separator: Style,

@@ -1,5 +1,6 @@
 use crate::config::*;
 use crate::error::Error;
+use crate::highlighters::key_value::KeyValueHighlighter;
 use crate::highlighters::keyword::KeywordHighlighter;
 use crate::highlighters::number::NumberHighlighter;
 use crate::highlighters::quote::QuoteHighlighter;
@@ -50,14 +51,15 @@ impl Default for Highlighter {
     /// Since we are compiling regexes under the hood, this is an expensive operation and should be done once and then
     /// be reused.
     ///
-    /// Note that both highlight groups and colors are subject to change between versions. For a more deterministic behavior,
-    /// use the `HighlightBuilder`.
+    /// Note that both highlight groups and colors are subject to change between versions. For a more deterministic
+    /// behavior, use the `HighlightBuilder`.
     fn default() -> Self {
         Highlighter::builder()
             .with_number_highlighter(NumberConfig::default())
             .with_uuid_highlighter(UuidConfig::default())
             .with_quote_highlighter(QuoteConfig::default())
             .with_unix_path_highlighter(UnixPathConfig::default())
+            .with_key_value_highlighter(KeyValueConfig::default())
             .build()
             .expect("Default constructor should never fail")
     }
@@ -79,6 +81,10 @@ impl HighlightBuilder {
 
     pub fn with_unix_path_highlighter(self, config: UnixPathConfig) -> Self {
         self.try_add_highlighter(UnixPathHighlighter::new(config))
+    }
+
+    pub fn with_key_value_highlighter(self, config: KeyValueConfig) -> Self {
+        self.try_add_highlighter(KeyValueHighlighter::new(config))
     }
 
     pub fn with_quote_highlighter(self, config: QuoteConfig) -> Self {
