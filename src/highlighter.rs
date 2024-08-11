@@ -44,6 +44,13 @@ impl Highlighter {
 }
 
 impl Default for Highlighter {
+    /// Compiles a default highlighter with reasonable defaults.
+    ///
+    /// Since we are compiling regexes under the hood, this is an expensive operation and should be done once and then
+    /// be reused.
+    ///
+    /// Note that both highlight groups and colors are subject to change between versions. For a more deterministic behavior,
+    /// use the `HighlightBuilder`.
     fn default() -> Self {
         Highlighter::builder()
             .with_number_highlighter(NumberConfig::default())
