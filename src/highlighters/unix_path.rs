@@ -32,8 +32,7 @@ impl Highlight for UnixPathHighlighter {
     fn apply(&self, input: &str) -> String {
         self.regex
             .replace_all(input, |caps: &Captures<'_>| {
-                let mut output = String::new();
-                let path = &caps[0];
+                let path = &caps["path"];
                 let chars: Vec<_> = path.chars().collect();
 
                 // Check if path starts with a valid character and not a double slash
@@ -43,11 +42,23 @@ impl Highlight for UnixPathHighlighter {
                     return path.to_string();
                 }
 
+                let mut output = String::new();
+                let mut current_segment = String::new();
                 for &char in &chars {
                     match char {
-                        '/' => output.push_str(&format!("{}", self.separator.paint(char.to_string()))),
-                        _ => output.push_str(&format!("{}", self.segment.paint(char.to_string()))),
+                        '/' => {
+                            if !current_segment.is_empty() {
+                                output.push_str(&self.segment.paint(&current_segment).to_string());
+                                current_segment.clear();
+                            }
+                            output.push_str(&self.separator.paint(char.to_string()).to_string());
+                        }
+                        _ => current_segment.push(char),
                     }
+                }
+
+                if !current_segment.is_empty() {
+                    output.push_str(&self.segment.paint(&current_segment).to_string());
                 }
 
                 output
@@ -65,7 +76,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_number_highlighter() {
+    fn test_unix_path_highlighter() {
         let highlighter = UnixPathHighlighter::new(UnixPathConfig {
             segment: green(),
             separator: yellow(),
@@ -73,10 +84,12 @@ mod tests {
         .unwrap();
 
         let cases = vec![
-            ("/user/local",
-
-             "[yellow]/[reset][green]u[reset][green]s[reset][green]e[reset][green]r[reset][yellow]/[reset][green]l[reset][green]o[reset][green]c[reset][green]a[reset][green]l[reset]"),
-                         ("No numbers here!", "No numbers here!")];
+            (
+                "/user/local",
+                "[yellow]/[reset][green]user[reset][yellow]/[reset][green]local[reset]",
+            ),
+            ("No numbers here!", "No numbers here!"),
+        ];
 
         for (input, expected) in cases {
             let actual = highlighter.apply(input);
