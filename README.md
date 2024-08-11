@@ -2,7 +2,7 @@
   <img src="assets/manifold.png" width="230"/>
 </p>
 
-#                                                                                                                                                                                                                                                                                                                                                              
+#                                                                                                                                                                                                                                                                                                                                                                  
 
 <p align="center">
 A general purpose highlighting library 
@@ -37,6 +37,9 @@ If you're just interested in a cli for highlighting text, see [`tailspin`](https
 The quickest way to get starting with manifold is using the default constructor. It will provide you with a highlighter
 with most of the highlighters enabled and sensible ordering.
 
+Note that colors, ordering and highlight groups might change between versions. To ensure a more deterministic behavior,
+use the **builder pattern**.
+
 ```rust
 use inlet_manifold::*;
 
@@ -51,13 +54,12 @@ fn main() {
 }
 ```
 
-> [!NOTE]
-> Keep in mind that colors, ordering and new highlight groups might change between versions. To ensure a more
-> deterministic behavior, use the **builder pattern**.
-
 ### Builder pattern
 
 Use the builder pattern to specify both styling and ordering of the highlighters.
+
+The order in which each highlighter is added determines the order that the highlight groups are applied. Once an item is
+highlighted, it will not be overwritten by a subsequent highlighter, even if it matches the pattern.
 
 ```rust 
 use inlet_manifold::*;
@@ -93,6 +95,3 @@ fn main() {
 }
 ```
 
-> [!IMPORTANT]  
-> The order of the highlighting determines the precedence of each item. Once an item is highlighted, it will not be
-> overwritten by a subsequent highlighter, even if it matches the pattern.
