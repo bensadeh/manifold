@@ -1,4 +1,4 @@
-use inlet_manifold::{Color, Highlighter, NumberConfig, Style};
+use inlet_manifold::{Color, Highlighter, NumberConfig, QuoteConfig, Style, UuidConfig};
 
 #[test]
 fn default_constructor_should_not_panic() {
@@ -16,11 +16,19 @@ fn it_works() {
                 ..Style::default()
             },
         })
+        .with_quote_highlighter(QuoteConfig {
+            quotes_token: '"',
+            color: Style {
+                fg: Some(Color::Yellow),
+                ..Style::default()
+            },
+        })
+        .with_uuid_highlighter(UuidConfig::default())
         .build();
 
     let highlighter = match highlighter_result {
         Ok(h) => h,
-        Err(_) => panic!("Highlighter should build successfully"),
+        Err(_) => panic!("Failed to build highlighter"),
     };
 
     let actual = highlighter.apply("Hello 123 world!".to_string());
