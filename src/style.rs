@@ -112,6 +112,14 @@ pub(crate) fn red() -> Style {
 }
 
 #[allow(dead_code)]
+pub(crate) fn blue() -> Style {
+    Style {
+        fg: Some(Color::Blue),
+        ..Style::default()
+    }
+}
+
+#[allow(dead_code)]
 pub(crate) fn red_background() -> Style {
     Style {
         bg: Some(Color::Red),

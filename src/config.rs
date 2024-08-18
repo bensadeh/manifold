@@ -47,6 +47,31 @@ impl Default for KeyValueConfig {
     }
 }
 
+pub struct TimeConfig {
+    pub time: Style,
+    pub zone: Style,
+    pub separator: Style,
+}
+
+impl Default for TimeConfig {
+    fn default() -> Self {
+        TimeConfig {
+            time: Style {
+                fg: Some(Color::Blue),
+                ..Style::default()
+            },
+            zone: Style {
+                fg: Some(Color::Red),
+                ..Style::default()
+            },
+            separator: Style {
+                faint: true,
+                ..Style::default()
+            },
+        }
+    }
+}
+
 pub struct UnixPathConfig {
     pub segment: Style,
     pub separator: Style,
