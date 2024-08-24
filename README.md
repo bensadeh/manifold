@@ -8,16 +8,6 @@
 <code>manifold</code> is the highlighting crate powering <code><a href="https://github.com/bensadeh/tailspin">tailspin</a></code>
 </p>
 
-## Overview
-
-`manifold` is a general-purpose highlighting engine for highlighting common objects such as dates, numbers, keywords,
-UUIDs and more. It works by surrounding these items with ANSI color codes, enabling them to be displayed in color in the
-terminal.
-
-`manifold` is the highlighting engine powering [`tailspin`](https://github.com/bensadeh/tailspin).
-
-## Usage
-
 ### Getting started
 
 Add the following to your `Cargo.toml`:
