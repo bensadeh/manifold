@@ -20,7 +20,7 @@ terminal.
 
 ### Getting started
 
-Add the following to your `Cargo.toml`, enabling the desired built-in providers:
+Add the following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
