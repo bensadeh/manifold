@@ -11,7 +11,17 @@ pub struct Ipv4Highlighter {
 
 impl Ipv4Highlighter {
     pub fn new(config: IpV4Config) -> Result<Self, Error> {
-        let regex = Regex::new(r"(\b\d{1,3})(\.)(\d{1,3})(\.)(\d{1,3})(\.)(\d{1,3}\b)")?;
+        let regex = Regex::new(
+            r"(?x)
+            (\b\d{1,3})
+            (\.)
+            (\d{1,3})
+            (\.)
+            (\d{1,3})
+            (\.)
+            (\d{1,3}\b)
+            ",
+        )?;
 
         Ok(Self {
             regex,
