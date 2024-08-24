@@ -111,6 +111,20 @@ pub(crate) fn red() -> Style {
     }
 }
 
+pub(crate) fn white() -> Style {
+    Style {
+        fg: Some(Color::White),
+        ..Style::default()
+    }
+}
+
+pub(crate) fn faint() -> Style {
+    Style {
+        faint: true,
+        ..Style::default()
+    }
+}
+
 pub(crate) fn blue() -> Style {
     Style {
         fg: Some(Color::Blue),

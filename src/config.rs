@@ -35,14 +35,8 @@ pub struct KeyValueConfig {
 impl Default for KeyValueConfig {
     fn default() -> Self {
         KeyValueConfig {
-            key: Style {
-                faint: true,
-                ..Style::default()
-            },
-            separator: Style {
-                fg: Some(Color::White),
-                ..Style::default()
-            },
+            key: faint(),
+            separator: white(),
         }
     }
 }
@@ -58,10 +52,7 @@ impl Default for TimeConfig {
         TimeConfig {
             time: blue(),
             zone: red(),
-            separator: Style {
-                faint: true,
-                ..Style::default()
-            },
+            separator: faint(),
         }
     }
 }
@@ -74,7 +65,23 @@ pub struct IpV4Config {
 impl Default for IpV4Config {
     fn default() -> Self {
         IpV4Config {
-            number: blue(),
+            number: blue_and_italic(),
+            separator: red(),
+        }
+    }
+}
+
+pub struct IpV6Config {
+    pub number: Style,
+    pub letter: Style,
+    pub separator: Style,
+}
+
+impl Default for IpV6Config {
+    fn default() -> Self {
+        IpV6Config {
+            number: blue_and_italic(),
+            letter: magenta_and_italic(),
             separator: red(),
         }
     }

@@ -1,6 +1,7 @@
 use crate::config::*;
 use crate::error::Error;
-use crate::highlighters::ip_v4::Ipv4Highlighter;
+use crate::highlighters::ip_v4::IpV4Highlighter;
+use crate::highlighters::ip_v6::IpV6Highlighter;
 use crate::highlighters::key_value::KeyValueHighlighter;
 use crate::highlighters::keyword::KeywordHighlighter;
 use crate::highlighters::number::NumberHighlighter;
@@ -61,6 +62,7 @@ impl Default for Highlighter {
         Highlighter::builder()
             .with_number_highlighter(NumberConfig::default())
             .with_ip_v4_highlighter(IpV4Config::default())
+            .with_ip_v6_highlighter(IpV6Config::default())
             .with_uuid_highlighter(UuidConfig::default())
             .with_quote_highlighter(QuoteConfig::default())
             .with_unix_path_highlighter(UnixPathConfig::default())
@@ -98,7 +100,11 @@ impl HighlightBuilder {
     }
 
     pub fn with_ip_v4_highlighter(self, config: IpV4Config) -> Self {
-        self.try_add_highlighter(Ipv4Highlighter::new(config))
+        self.try_add_highlighter(IpV4Highlighter::new(config))
+    }
+
+    pub fn with_ip_v6_highlighter(self, config: IpV6Config) -> Self {
+        self.try_add_highlighter(IpV6Highlighter::new(config))
     }
 
     pub fn with_regex_highlighter(self, regexp: String, style: Style) -> Self {

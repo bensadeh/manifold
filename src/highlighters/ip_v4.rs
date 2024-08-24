@@ -3,13 +3,13 @@ use crate::IpV4Config;
 use nu_ansi_term::Style as NuStyle;
 use regex::{Captures, Error, Regex};
 
-pub struct Ipv4Highlighter {
+pub struct IpV4Highlighter {
     regex: Regex,
     number: NuStyle,
     separator: NuStyle,
 }
 
-impl Ipv4Highlighter {
+impl IpV4Highlighter {
     pub fn new(config: IpV4Config) -> Result<Self, Error> {
         let regex = Regex::new(
             r"(?x)               # Enable verbose mode to allow comments and ignore whitespace
@@ -31,7 +31,7 @@ impl Ipv4Highlighter {
     }
 }
 
-impl Highlight for Ipv4Highlighter {
+impl Highlight for IpV4Highlighter {
     fn apply(&self, input: &str) -> String {
         let segment = &self.number;
         let separator = &self.separator;
@@ -62,12 +62,13 @@ mod tests {
     use crate::highlighter::Highlight;
     use crate::style::*;
     use crate::tests::escape_code_converter::ConvertEscapeCodes;
+    use crate::IpV4Config;
 
     use super::*;
 
     #[test]
     fn test_ip_v4_highlighter() {
-        let highlighter = Ipv4Highlighter::new(IpV4Config {
+        let highlighter = IpV4Highlighter::new(IpV4Config {
             number: blue(),
             separator: red(),
         })
