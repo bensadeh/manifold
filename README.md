@@ -2,10 +2,10 @@
   <img src="assets/manifold.png" width="230"/>
 </p>
 
-#                                                                                                                                                                                                                                                                                                                                                                   
+#                                                                                                                                                                                                                                                                                                                                                                    
 
 <p align="center">
-A general purpose highlighting library 
+<code>manifold</code> is the highlighting crate powering <code><a href="https://github.com/bensadeh/tailspin">tailspin</a></code>
 </p>
 
 ## Overview
@@ -16,26 +16,21 @@ terminal.
 
 `manifold` is the highlighting engine powering [`tailspin`](https://github.com/bensadeh/tailspin).
 
-## Supported Highlight Groups
+## Usage
 
-- Custom keywords
-- Numbers
-- UUIDs
-- URLs
-- IPs (v4 & v6)
-- Dates
-- Quotes
-- Unix File Paths
-- Key Value pairs
-- Pointer Addresses
-- Unix Processes
+### Getting started
 
-## Getting Started
+Add the following to your `Cargo.toml`, enabling the desired built-in providers:
 
-### From default
+```toml
+[dependencies]
+inlet_manifold = "0.1.0"
+```
+
+### Create highlighter from default
 
 The quickest way to get starting with manifold is using the default constructor. It will provide you with a highlighter
-with most of the highlighters enabled and sensible ordering.
+with most of the highlighters enabled and sensible ordering and defaults.
 
 Note that colors, ordering and highlight groups might change between versions. To ensure a more deterministic behavior,
 use the **builder pattern**.
@@ -43,55 +38,52 @@ use the **builder pattern**.
 ```rust
 use inlet_manifold::*;
 
-fn main() {
-    let highlighter = Highlighter::default();
+let highlighter = Highlighter::default();
 
-    let input = "Hello 42 world".to_string();
-    let output = highlighter.apply(input);
+let input = "Hello 42 world".to_string();
+let output = highlighter.apply(input);
 
-    println!("{}", input);  // "Hello 42 world"
-    println!("{}", output); // "Hello \u{1b}[36m42\u{1b}[0m world!"
-}
+println!("{}", input);  // "Hello 42 world"
+println!("{}", output); // "Hello \u{1b}[36m42\u{1b}[0m world!"
 ```
 
-### Builder pattern
+### Create highlighter with builder pattern
 
-Use the builder pattern to specify both styling and ordering of the highlighters.
+Use the builder pattern to specify both styling and ordering of the highlighters. The order in which each highlighter is
+added is significant. `manifold` will apply the highlighters in the order they were added.
 
-The order in which each highlighter is added determines the order that the highlight groups are applied. Once an item is
-highlighted, it will not be overwritten by a subsequent highlighter, even if it matches the pattern.
+Once an item is highlighted, it will not be overwritten by a subsequent highlighter.
 
 ```rust 
 use inlet_manifold::*;
 
-fn main() {
-    let highlighter_result = Highlighter::builder()
-        .with_number_highlighter(NumberConfig {
-            number: Style {
-                fg: Some(Color::Cyan),
-                ..Style::default()
-            },
-        })
-        .with_quote_highlighter(QuoteConfig {
-            quotes_token: '"',
-            color: Style {
-                fg: Some(Color::Yellow),
-                ..Style::default()
-            },
-        })
-        .with_uuid_highlighter(UuidConfig::default())
-        .build();
+let highlighter_result = Highlighter::builder()
+    .with_number_highlighter(NumberConfig {
+        number: Style {
+            fg: Some(Color::Cyan),
+            ..Style::default()
+        },
+    })
+    .with_quote_highlighter(QuoteConfig {
+        quotes_token: '"',
+        color: Style {
+            fg: Some(Color::Yellow),
+            ..Style::default()
+        },
+    })
+    .with_uuid_highlighter(UuidConfig::default())
+    .build();
 
-    let highlighter = match highlighter_result {
-        Ok(h) => h,
-        Err(_) => panic!("Failed to build highlighter"),
-    };
+// Building highlighters might fail if the regexes inside fails to compile
+let highlighter = match highlighter_result {
+    Ok(h) => h,
+    Err(_) => panic!("Failed to build highlighter"),
+};
 
-    let input = "Hello 42 world".to_string();
-    let output = highlighter.apply(input);
+let input = "Hello 42 world".to_string();
+let output = highlighter.apply(input);
 
-    println!("{}", input);  // "Hello 42 world"
-    println!("{}", output); // "Hello \u{1b}[36m42\u{1b}[0m world!"
-}
+println!("{}", input);  // "Hello 42 world"
+println!("{}", output); // "Hello \u{1b}[36m42\u{1b}[0m world!"
 ```
 
