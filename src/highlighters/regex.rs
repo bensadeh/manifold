@@ -14,6 +14,15 @@ impl RegexpHighlighter {
     /// to any text matching the regular expression.
     ///
     /// It supports one capture group `()`. When found, it will apply the style to the captured text.
+    ///
+    /// (If you are just interested in highlighting a specific keyword, you can use the simpler `KeywordHighlighter`
+    /// instead.)
+    /// # Example
+    ///
+    /// Given the regular expression pattern `'Started (.*)\.'`, the highlighter will
+    /// apply the style to any text that matches the pattern within the capture group.
+    /// For example, in the text `'Started process.'`, only the word `'process'` will be styled.
+    ///
     pub fn new(regular_expression: String, style: Style) -> Result<Self, Error> {
         let regex = Regex::new(regular_expression.as_str())?;
 
