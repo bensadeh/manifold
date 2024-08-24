@@ -12,15 +12,15 @@ pub struct Ipv4Highlighter {
 impl Ipv4Highlighter {
     pub fn new(config: IpV4Config) -> Result<Self, Error> {
         let regex = Regex::new(
-            r"(?x)
-            (\b\d{1,3})
-            (\.)
-            (\d{1,3})
-            (\.)
-            (\d{1,3})
-            (\.)
-            (\d{1,3}\b)
-            ",
+            r"(?x)               # Enable verbose mode to allow comments and ignore whitespace
+            (\b\d{1,3})          # Match 1 to 3 digits at a word boundary (start of the IP segment)
+            (\.)                 # Match a literal dot (.)
+            (\d{1,3})            # Match 1 to 3 digits (next IP segment)
+            (\.)                 # Match a literal dot (.)
+            (\d{1,3})            # Match 1 to 3 digits (next IP segment)
+            (\.)                 # Match a literal dot (.)
+            (\d{1,3}\b)          # Match 1 to 3 digits at a word boundary (end of the IP segment)
+    ",
         )?;
 
         Ok(Self {
