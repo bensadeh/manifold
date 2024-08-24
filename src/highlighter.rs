@@ -5,11 +5,13 @@ use crate::highlighters::key_value::KeyValueHighlighter;
 use crate::highlighters::keyword::KeywordHighlighter;
 use crate::highlighters::number::NumberHighlighter;
 use crate::highlighters::quote::QuoteHighlighter;
+use crate::highlighters::regex::RegexpHighlighter;
 use crate::highlighters::time::TimeHighlighter;
 use crate::highlighters::unix_path::UnixPathHighlighter;
 use crate::highlighters::uuid::UuidHighlighter;
 use crate::normalizer::normalize_keyword_configs;
 use crate::split_and_apply::apply_only_to_unhighlighted;
+use crate::Style;
 use std::sync::Arc;
 
 pub trait Highlight: Sync + Send {
@@ -97,6 +99,10 @@ impl HighlightBuilder {
 
     pub fn with_ip_v4_highlighter(self, config: IpV4Config) -> Self {
         self.try_add_highlighter(Ipv4Highlighter::new(config))
+    }
+
+    pub fn with_regex_highlighter(self, regexp: String, style: Style) -> Self {
+        self.try_add_highlighter(RegexpHighlighter::new(regexp, style))
     }
 
     pub fn with_quote_highlighter(self, config: QuoteConfig) -> Self {
