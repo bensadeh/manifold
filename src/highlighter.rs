@@ -1,5 +1,6 @@
 use crate::config::*;
 use crate::error::Error;
+use crate::highlighters::ip_v4::Ipv4Highlighter;
 use crate::highlighters::key_value::KeyValueHighlighter;
 use crate::highlighters::keyword::KeywordHighlighter;
 use crate::highlighters::number::NumberHighlighter;
@@ -57,6 +58,7 @@ impl Default for Highlighter {
     fn default() -> Self {
         Highlighter::builder()
             .with_number_highlighter(NumberConfig::default())
+            .with_ip_v4_highlighter(IpV4Config::default())
             .with_uuid_highlighter(UuidConfig::default())
             .with_quote_highlighter(QuoteConfig::default())
             .with_unix_path_highlighter(UnixPathConfig::default())
@@ -91,6 +93,10 @@ impl HighlightBuilder {
 
     pub fn with_time_highlighter(self, config: TimeConfig) -> Self {
         self.try_add_highlighter(TimeHighlighter::new(config))
+    }
+
+    pub fn with_ip_v4_highlighter(self, config: IpV4Config) -> Self {
+        self.try_add_highlighter(Ipv4Highlighter::new(config))
     }
 
     pub fn with_quote_highlighter(self, config: QuoteConfig) -> Self {

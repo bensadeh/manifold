@@ -56,18 +56,26 @@ pub struct TimeConfig {
 impl Default for TimeConfig {
     fn default() -> Self {
         TimeConfig {
-            time: Style {
-                fg: Some(Color::Blue),
-                ..Style::default()
-            },
-            zone: Style {
-                fg: Some(Color::Red),
-                ..Style::default()
-            },
+            time: blue(),
+            zone: red(),
             separator: Style {
                 faint: true,
                 ..Style::default()
             },
+        }
+    }
+}
+
+pub struct IpV4Config {
+    pub number: Style,
+    pub separator: Style,
+}
+
+impl Default for IpV4Config {
+    fn default() -> Self {
+        IpV4Config {
+            number: blue(),
+            separator: red(),
         }
     }
 }

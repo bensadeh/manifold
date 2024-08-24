@@ -111,7 +111,6 @@ pub(crate) fn red() -> Style {
     }
 }
 
-#[allow(dead_code)]
 pub(crate) fn blue() -> Style {
     Style {
         fg: Some(Color::Blue),
