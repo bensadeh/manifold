@@ -87,6 +87,30 @@ impl Default for IpV6Config {
     }
 }
 
+pub struct UrlConfig {
+    pub http: Style,
+    pub https: Style,
+    pub host: Style,
+    pub path: Style,
+    pub query_params_key: Style,
+    pub query_params_value: Style,
+    pub symbols: Style,
+}
+
+impl Default for UrlConfig {
+    fn default() -> Self {
+        UrlConfig {
+            http: red_and_faint(),
+            https: green_and_faint(),
+            host: blue_and_faint(),
+            path: blue(),
+            query_params_key: magenta(),
+            query_params_value: cyan(),
+            symbols: red(),
+        }
+    }
+}
+
 pub struct UnixPathConfig {
     pub segment: Style,
     pub separator: Style,

@@ -9,6 +9,7 @@ use crate::highlighters::quote::QuoteHighlighter;
 use crate::highlighters::regex::RegexpHighlighter;
 use crate::highlighters::time::TimeHighlighter;
 use crate::highlighters::unix_path::UnixPathHighlighter;
+use crate::highlighters::url::UrlHighlighter;
 use crate::highlighters::uuid::UuidHighlighter;
 use crate::normalizer::normalize_keyword_configs;
 use crate::split_and_apply::apply_only_to_unhighlighted;
@@ -67,6 +68,7 @@ impl Default for Highlighter {
             .with_quote_highlighter(QuoteConfig::default())
             .with_unix_path_highlighter(UnixPathConfig::default())
             .with_key_value_highlighter(KeyValueConfig::default())
+            .with_url_highlighter(UrlConfig::default())
             .with_time_highlighter(TimeConfig::default())
             .build()
             .expect("Default constructor should never fail")
@@ -105,6 +107,10 @@ impl HighlightBuilder {
 
     pub fn with_ip_v6_highlighter(self, config: IpV6Config) -> Self {
         self.try_add_highlighter(IpV6Highlighter::new(config))
+    }
+
+    pub fn with_url_highlighter(self, config: UrlConfig) -> Self {
+        self.try_add_highlighter(UrlHighlighter::new(config))
     }
 
     pub fn with_regex_highlighter(self, regexp: String, style: Style) -> Self {

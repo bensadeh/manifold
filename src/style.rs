@@ -97,6 +97,14 @@ pub(crate) fn green() -> Style {
     }
 }
 
+pub(crate) fn green_and_faint() -> Style {
+    Style {
+        fg: Some(Color::Green),
+        faint: true,
+        ..Style::default()
+    }
+}
+
 pub(crate) fn cyan() -> Style {
     Style {
         fg: Some(Color::Cyan),
@@ -107,6 +115,14 @@ pub(crate) fn cyan() -> Style {
 pub(crate) fn red() -> Style {
     Style {
         fg: Some(Color::Red),
+        ..Style::default()
+    }
+}
+
+pub(crate) fn red_and_faint() -> Style {
+    Style {
+        fg: Some(Color::Red),
+        faint: true,
         ..Style::default()
     }
 }
@@ -132,10 +148,10 @@ pub(crate) fn blue() -> Style {
     }
 }
 
-#[allow(dead_code)]
-pub(crate) fn red_background() -> Style {
+pub(crate) fn blue_and_faint() -> Style {
     Style {
-        bg: Some(Color::Red),
+        fg: Some(Color::Blue),
+        faint: true,
         ..Style::default()
     }
 }
@@ -144,6 +160,21 @@ pub(crate) fn blue_and_italic() -> Style {
     Style {
         fg: Some(Color::Blue),
         italic: true,
+        ..Style::default()
+    }
+}
+
+#[allow(dead_code)]
+pub(crate) fn red_background() -> Style {
+    Style {
+        bg: Some(Color::Red),
+        ..Style::default()
+    }
+}
+
+pub(crate) fn magenta() -> Style {
+    Style {
+        fg: Some(Color::Magenta),
         ..Style::default()
     }
 }
