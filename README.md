@@ -26,8 +26,6 @@ Note that colors, ordering and highlight groups might change between versions. T
 use the **builder pattern**.
 
 ```rust
-use inlet_manifold::*;
-
 let highlighter = Highlighter::default();
 
 let input = "Hello 42 world".to_string();
@@ -45,8 +43,6 @@ added is significant. `manifold` will apply the highlighters in the order they w
 Once an item is highlighted, it will not be overwritten by a subsequent highlighter.
 
 ```rust 
-use inlet_manifold::*;
-
 let highlighter_result = Highlighter::builder()
     .with_number_highlighter(NumberConfig {
         number: Style {
@@ -64,7 +60,7 @@ let highlighter_result = Highlighter::builder()
     .with_uuid_highlighter(UuidConfig::default())
     .build();
 
-// Building highlighters might fail if the regexes inside fails to compile
+// Using the highlight builder can fail if the regexes inside don't compile
 let highlighter = match highlighter_result {
     Ok(h) => h,
     Err(_) => panic!("Failed to build highlighter"),
