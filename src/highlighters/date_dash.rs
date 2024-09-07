@@ -39,52 +39,38 @@ impl DateDashHighlighter {
             separator: time_config.separator.into(),
         })
     }
+
+    fn highlight_date(&self, caps: &Captures<'_>, input: &str) -> String {
+        let year = caps.name("year").map(|m| m.as_str());
+        let first = caps.name("first").map(|m| m.as_str());
+        let second = caps.name("second").map(|m| m.as_str());
+        let separator1 = caps.name("separator").map(|m| m.as_str());
+        let separator2 = caps.name("separator2").map(|m| m.as_str());
+
+        match (year, first, second, separator1, separator2) {
+            (Some(y), Some(f), Some(s), Some(s1), Some(s2)) => format!(
+                "{}{}{}{}{}",
+                self.date.paint(y),
+                self.separator.paint(s1),
+                self.date.paint(f),
+                self.separator.paint(s2),
+                self.date.paint(s)
+            ),
+            _ => input.to_string(),
+        }
+    }
 }
 
 impl Highlight for DateDashHighlighter {
     fn apply(&self, input: &str) -> String {
-        let first_string = self
+        let first_run = self
             .regex_yyyy_xx_xx
-            .replace_all(input, |caps: &Captures<'_>| {
-                let year = caps.name("year").map(|m| m.as_str());
-                let month = caps.name("month").map(|m| m.as_str());
-                let day = caps.name("day").map(|m| m.as_str());
-                let separator1 = caps.name("separator1").map(|m| m.as_str());
-                let separator2 = caps.name("separator2").map(|m| m.as_str());
-
-                match (year, month, day, separator1, separator2) {
-                    (Some(y), Some(mo), Some(d), Some(s1), Some(s2)) => format!(
-                        "{}{}{}{}{}",
-                        self.date.paint(y),
-                        self.separator.paint(s1),
-                        self.date.paint(mo),
-                        self.separator.paint(s2),
-                        self.date.paint(d)
-                    ),
-                    _ => input.to_string(),
-                }
-            })
+            .replace_all(input, |caps: &Captures<'_>| self.highlight_date(caps, input))
             .to_string();
 
         self.regex_xx_xx_yyyy
-            .replace_all(first_string.as_str(), |caps: &Captures<'_>| {
-                let year = caps.name("year").map(|m| m.as_str());
-                let month = caps.name("month").map(|m| m.as_str());
-                let day = caps.name("day").map(|m| m.as_str());
-                let separator1 = caps.name("separator1").map(|m| m.as_str());
-                let separator2 = caps.name("separator2").map(|m| m.as_str());
-
-                match (year, month, day, separator1, separator2) {
-                    (Some(y), Some(mo), Some(d), Some(s1), Some(s2)) => format!(
-                        "{}{}{}{}{}",
-                        self.date.paint(y),
-                        self.separator.paint(s1),
-                        self.date.paint(mo),
-                        self.separator.paint(s2),
-                        self.date.paint(d)
-                    ),
-                    _ => input.to_string(),
-                }
+            .replace_all(first_run.as_str(), |caps: &Captures<'_>| {
+                self.highlight_date(caps, input)
             })
             .to_string()
     }
