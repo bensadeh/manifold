@@ -41,15 +41,18 @@ impl Default for KeyValueConfig {
     }
 }
 
-pub struct TimeConfig {
+#[derive(Copy, Clone)]
+pub struct DateTimeConfig {
+    pub date: Style,
     pub time: Style,
     pub zone: Style,
     pub separator: Style,
 }
 
-impl Default for TimeConfig {
+impl Default for DateTimeConfig {
     fn default() -> Self {
-        TimeConfig {
+        DateTimeConfig {
+            date: magenta(),
             time: blue(),
             zone: red(),
             separator: faint(),

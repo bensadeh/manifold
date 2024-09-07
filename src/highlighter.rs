@@ -1,5 +1,6 @@
 use crate::config::*;
 use crate::error::Error;
+use crate::highlighters::date_dash::DateDashHighlighter;
 use crate::highlighters::date_time::TimeHighlighter;
 use crate::highlighters::ip_v4::IpV4Highlighter;
 use crate::highlighters::ip_v6::IpV6Highlighter;
@@ -60,7 +61,7 @@ impl Default for Highlighter {
     /// be reused.
     fn default() -> Self {
         Highlighter::builder()
-            .with_number_highlighter(NumberConfig::default())
+            .with_date_time_highlighters(DateTimeConfig::default())
             .with_ip_v4_highlighter(IpV4Config::default())
             .with_ip_v6_highlighter(IpV6Config::default())
             .with_uuid_highlighter(UuidConfig::default())
@@ -70,7 +71,7 @@ impl Default for Highlighter {
             .with_unix_process_highlighter(UnixProcessConfig::default())
             .with_key_value_highlighter(KeyValueConfig::default())
             .with_url_highlighter(UrlConfig::default())
-            .with_time_highlighter(TimeConfig::default())
+            .with_number_highlighter(NumberConfig::default())
             .build()
             .expect("Default constructor should never fail")
     }
@@ -102,8 +103,9 @@ impl HighlightBuilder {
         self.try_add_highlighter(KeyValueHighlighter::new(config))
     }
 
-    pub fn with_time_highlighter(self, config: TimeConfig) -> Self {
+    pub fn with_date_time_highlighters(self, config: DateTimeConfig) -> Self {
         self.try_add_highlighter(TimeHighlighter::new(config))
+            .try_add_highlighter(DateDashHighlighter::new(config))
     }
 
     pub fn with_ip_v4_highlighter(self, config: IpV4Config) -> Self {
