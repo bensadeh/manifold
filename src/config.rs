@@ -125,6 +125,26 @@ impl Default for UnixPathConfig {
     }
 }
 
+pub struct PointerConfig {
+    pub number: Style,
+    pub letter: Style,
+    pub separator: Style,
+    pub separator_token: char,
+    pub x: Style,
+}
+
+impl Default for PointerConfig {
+    fn default() -> Self {
+        PointerConfig {
+            number: blue_and_italic(),
+            letter: magenta_and_italic(),
+            separator: faint(),
+            separator_token: '•',
+            x: red(),
+        }
+    }
+}
+
 pub struct UnixProcessConfig {
     pub name: Style,
     pub id: Style,

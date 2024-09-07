@@ -1,13 +1,14 @@
 use crate::config::*;
 use crate::error::Error;
+use crate::highlighters::date_time::TimeHighlighter;
 use crate::highlighters::ip_v4::IpV4Highlighter;
 use crate::highlighters::ip_v6::IpV6Highlighter;
 use crate::highlighters::key_value::KeyValueHighlighter;
 use crate::highlighters::keyword::KeywordHighlighter;
 use crate::highlighters::number::NumberHighlighter;
+use crate::highlighters::pointer::PointerHighlighter;
 use crate::highlighters::quote::QuoteHighlighter;
 use crate::highlighters::regex::RegexpHighlighter;
-use crate::highlighters::time::TimeHighlighter;
 use crate::highlighters::unix_path::UnixPathHighlighter;
 use crate::highlighters::unix_process::UnixProcessHighlighter;
 use crate::highlighters::url::UrlHighlighter;
@@ -64,6 +65,7 @@ impl Default for Highlighter {
             .with_ip_v6_highlighter(IpV6Config::default())
             .with_uuid_highlighter(UuidConfig::default())
             .with_quote_highlighter(QuoteConfig::default())
+            .with_pointer_highlighter(PointerConfig::default())
             .with_unix_path_highlighter(UnixPathConfig::default())
             .with_unix_process_highlighter(UnixProcessConfig::default())
             .with_key_value_highlighter(KeyValueConfig::default())
@@ -114,6 +116,10 @@ impl HighlightBuilder {
 
     pub fn with_url_highlighter(self, config: UrlConfig) -> Self {
         self.try_add_highlighter(UrlHighlighter::new(config))
+    }
+
+    pub fn with_pointer_highlighter(self, config: PointerConfig) -> Self {
+        self.try_add_highlighter(PointerHighlighter::new(config))
     }
 
     pub fn with_regex_highlighter(self, regexp: String, style: Style) -> Self {

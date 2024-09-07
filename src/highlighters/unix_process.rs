@@ -58,7 +58,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_unix_path_highlighter() {
+    fn test_unix_process_highlighter() {
         let highlighter = UnixProcessHighlighter::new(UnixProcessConfig {
             name: green(),
             id: yellow(),
