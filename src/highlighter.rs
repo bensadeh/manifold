@@ -9,6 +9,7 @@ use crate::highlighters::quote::QuoteHighlighter;
 use crate::highlighters::regex::RegexpHighlighter;
 use crate::highlighters::time::TimeHighlighter;
 use crate::highlighters::unix_path::UnixPathHighlighter;
+use crate::highlighters::unix_process::UnixProcessHighlighter;
 use crate::highlighters::url::UrlHighlighter;
 use crate::highlighters::uuid::UuidHighlighter;
 use crate::normalizer::normalize_keyword_configs;
@@ -56,9 +57,6 @@ impl Default for Highlighter {
     ///
     /// Since we are compiling regexes under the hood, this is an expensive operation and should be done once and then
     /// be reused.
-    ///
-    /// Note that both highlight groups and colors are subject to change between versions. For a more deterministic
-    /// behavior, use the `HighlightBuilder`.
     fn default() -> Self {
         Highlighter::builder()
             .with_number_highlighter(NumberConfig::default())
@@ -67,6 +65,7 @@ impl Default for Highlighter {
             .with_uuid_highlighter(UuidConfig::default())
             .with_quote_highlighter(QuoteConfig::default())
             .with_unix_path_highlighter(UnixPathConfig::default())
+            .with_unix_process_highlighter(UnixProcessConfig::default())
             .with_key_value_highlighter(KeyValueConfig::default())
             .with_url_highlighter(UrlConfig::default())
             .with_time_highlighter(TimeConfig::default())
@@ -91,6 +90,10 @@ impl HighlightBuilder {
 
     pub fn with_unix_path_highlighter(self, config: UnixPathConfig) -> Self {
         self.try_add_highlighter(UnixPathHighlighter::new(config))
+    }
+
+    pub fn with_unix_process_highlighter(self, config: UnixProcessConfig) -> Self {
+        self.try_add_highlighter(UnixProcessHighlighter::new(config))
     }
 
     pub fn with_key_value_highlighter(self, config: KeyValueConfig) -> Self {

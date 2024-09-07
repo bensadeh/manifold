@@ -125,6 +125,22 @@ impl Default for UnixPathConfig {
     }
 }
 
+pub struct UnixProcessConfig {
+    pub name: Style,
+    pub id: Style,
+    pub bracket: Style,
+}
+
+impl Default for UnixProcessConfig {
+    fn default() -> Self {
+        UnixProcessConfig {
+            name: green(),
+            id: yellow(),
+            bracket: red(),
+        }
+    }
+}
+
 pub struct QuoteConfig {
     pub quotes_token: char,
     pub color: Style,

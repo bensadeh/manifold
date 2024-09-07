@@ -7,5 +7,6 @@ pub mod quote;
 pub mod regex;
 pub mod time;
 pub mod unix_path;
+pub mod unix_process;
 pub mod url;
 pub mod uuid;
