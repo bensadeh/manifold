@@ -1,38 +1,41 @@
 use crate::highlighter::Highlight;
 use crate::DateTimeConfig;
 use nu_ansi_term::Style as NuStyle;
-use nu_ansi_term::Style;
-use regex::{Error, Regex};
+use regex::{Captures, Error, Regex};
 
 pub struct DateDashHighlighter {
-    regex: Regex,
-    time: NuStyle,
-    zone: NuStyle,
+    regex_yyyy_xx_xx: Regex,
+    regex_xx_xx_yyyy: Regex,
+    date: NuStyle,
     separator: NuStyle,
 }
 
 impl DateDashHighlighter {
     pub fn new(time_config: DateTimeConfig) -> Result<Self, Error> {
-        let regex = Regex::new(
+        let regex_yyyy_xx_xx = Regex::new(
             r"(?x)
-            (?P<year>19\d{2}|20\d{2})            // Year: 1900-2099
-            (?P<separator1>-)                    // Separator (dash)
-            (?:
-                (?P<month>0[1-9]|1[0-2])         // Month: 01-12
-                (?P<separator2>-)
-                (?P<day>0[1-9]|[12]\d|3[01])     // Day: 01-31
-                |
-                (?P<day_alt>0[1-9]|[12]\d|3[01]) // Day: 01-31
-                (?P<separator2_alt>-)
-                (?P<month_alt>0[1-9]|1[0-2])     // Month: 01-12
-            )
-            ",
+                (?P<year>19\d{2}|20\d{2})            # Year: 1900-2099
+                (?P<separator>[-/])                  # Separator (dash or slash)
+                (?P<first>0[1-9]|[12]\d|3[01])       # First number: 01-31
+                (?P<separator2>[-/])                 # Separator (dash or slash)
+                (?P<second>0[1-9]|[12]\d|3[01])      # Second number: 01-31
+                ",
+        )?;
+
+        let regex_xx_xx_yyyy = Regex::new(
+            r"(?x)
+                (?P<first>0[1-9]|[12]\d|3[01])       # First number: 01-31
+                (?P<separator>[-/])                  # Separator (dash or slash)
+                (?P<second>0[1-9]|[12]\d|3[01])      # Second number: 01-31
+                (?P<separator2>[-/])                 # Separator (dash or slash)
+                (?P<year>19\d{2}|20\d{2})            # Year: 1900-2099
+                ",
         )?;
 
         Ok(Self {
-            regex,
-            time: time_config.time.into(),
-            zone: time_config.zone.into(),
+            regex_yyyy_xx_xx,
+            regex_xx_xx_yyyy,
+            date: time_config.time.into(),
             separator: time_config.separator.into(),
         })
     }
@@ -40,29 +43,48 @@ impl DateDashHighlighter {
 
 impl Highlight for DateDashHighlighter {
     fn apply(&self, input: &str) -> String {
-        self.regex
-            .replace_all(input, |caps: &regex::Captures<'_>| {
-                let paint_and_stringify = |name: &str, style: &Style| {
-                    caps.name(name)
-                        .map(|m| style.paint(m.as_str()).to_string())
-                        .unwrap_or_default()
-                };
+        let first_string = self
+            .regex_yyyy_xx_xx
+            .replace_all(input, |caps: &Captures<'_>| {
+                let year = caps.name("year").map(|m| m.as_str());
+                let month = caps.name("month").map(|m| m.as_str());
+                let day = caps.name("day").map(|m| m.as_str());
+                let separator1 = caps.name("separator1").map(|m| m.as_str());
+                let separator2 = caps.name("separator2").map(|m| m.as_str());
 
-                let parts = [
-                    ("T", &self.zone),
-                    ("hours", &self.time),
-                    ("colon1", &self.separator),
-                    ("minutes", &self.time),
-                    ("colon2", &self.separator),
-                    ("seconds", &self.time),
-                    ("frac_sep", &self.separator),
-                    ("frac_digits", &self.time),
-                    ("tz", &self.zone),
-                ];
+                match (year, month, day, separator1, separator2) {
+                    (Some(y), Some(mo), Some(d), Some(s1), Some(s2)) => format!(
+                        "{}{}{}{}{}",
+                        self.date.paint(y),
+                        self.separator.paint(s1),
+                        self.date.paint(mo),
+                        self.separator.paint(s2),
+                        self.date.paint(d)
+                    ),
+                    _ => input.to_string(),
+                }
+            })
+            .to_string();
 
-                parts.iter().fold(String::new(), |acc, (name, style)| {
-                    acc + &paint_and_stringify(name, style)
-                })
+        self.regex_xx_xx_yyyy
+            .replace_all(first_string.as_str(), |caps: &Captures<'_>| {
+                let year = caps.name("year").map(|m| m.as_str());
+                let month = caps.name("month").map(|m| m.as_str());
+                let day = caps.name("day").map(|m| m.as_str());
+                let separator1 = caps.name("separator1").map(|m| m.as_str());
+                let separator2 = caps.name("separator2").map(|m| m.as_str());
+
+                match (year, month, day, separator1, separator2) {
+                    (Some(y), Some(mo), Some(d), Some(s1), Some(s2)) => format!(
+                        "{}{}{}{}{}",
+                        self.date.paint(y),
+                        self.separator.paint(s1),
+                        self.date.paint(mo),
+                        self.separator.paint(s2),
+                        self.date.paint(d)
+                    ),
+                    _ => input.to_string(),
+                }
             })
             .to_string()
     }
@@ -76,17 +98,11 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_time_highlighter() {
+    fn test_date_dash_highlighter() {
         let config = DateTimeConfig::default();
         let highlighter = DateDashHighlighter::new(config).unwrap();
 
-        let cases = vec![
-            (
-                "07:46:34",
-                "[red]07[reset][yellow]:[reset][red]46[reset][yellow]:[reset][red]34[reset]",
-            ),
-            ("No time here!", "No time here!"),
-        ];
+        let cases = vec![("2022-09-09", "2022-09-09"), ("No time here!", "No time here!")];
 
         for (input, expected) in cases {
             let actual = highlighter.apply(input);

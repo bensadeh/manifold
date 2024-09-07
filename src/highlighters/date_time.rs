@@ -75,6 +75,7 @@ mod tests {
     #[test]
     fn test_time_highlighter() {
         let config = DateTimeConfig {
+            date: Default::default(),
             time: red(),
             zone: blue(),
             separator: yellow(),
