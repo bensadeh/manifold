@@ -1,10 +1,13 @@
 use crate::highlighter::Highlight;
+use crate::style::yellow;
 use crate::JsonConfig;
 use nu_ansi_term::Style as NuStyle;
 use serde_json::Value;
+use std::fmt::Write;
 
 pub struct JsonHighlighter {
     pub key: NuStyle,
+    pub quote_token: NuStyle,
     pub curly_bracket: NuStyle,
     pub square_bracket: NuStyle,
     pub comma: NuStyle,
@@ -15,6 +18,7 @@ impl JsonHighlighter {
     pub fn new(config: JsonConfig) -> Self {
         Self {
             key: config.key.into(),
+            quote_token: config.quote_token.into(),
             curly_bracket: config.curly_bracket.into(),
             square_bracket: config.square_bracket.into(),
             comma: config.comma.into(),
@@ -22,60 +26,80 @@ impl JsonHighlighter {
         }
     }
 
-    fn highlight_json(&self, value: Value) -> String {
+    fn format_json(&self, value: &Value, output: &mut String) {
         match value {
             Value::Object(map) => {
-                let mut result = String::new();
-                result.push_str(&self.curly_bracket.paint("{").to_string());
-
-                for (i, (k, v)) in map.iter().enumerate() {
-                    // Highlight the key
-                    result.push_str(&self.key.paint(format!("\"{}\"", k)).to_string());
-                    result.push_str(&self.colon.paint(": ").to_string());
-                    // For now, leave the value unhighlighted
-                    result.push_str(&v.to_string());
-
-                    // Add a comma after each pair, except the last one
-                    if i < map.len() - 1 {
-                        result.push_str(&self.comma.paint(", ").to_string());
+                write!(output, "{}", self.curly_bracket.paint("{")).unwrap();
+                let mut first = true;
+                for (key, val) in map {
+                    if !first {
+                        write!(output, "{} ", self.comma.paint(",")).unwrap();
                     }
+                    first = false;
+
+                    write!(
+                        output,
+                        " {}{}{} ",
+                        self.quote_token.paint("\""),
+                        self.key.paint(key),
+                        self.quote_token.paint("\"")
+                    )
+                    .unwrap();
+                    write!(output, "{} ", self.colon.paint(":")).unwrap();
+
+                    // Recursively format the value
+                    self.format_json(val, output);
                 }
-
-                result.push_str(&self.curly_bracket.paint("}").to_string());
-                result
+                write!(output, " {}", self.curly_bracket.paint("}")).unwrap();
             }
-            Value::Array(arr) => {
-                let mut result = String::new();
-                result.push_str(&self.square_bracket.paint("[").to_string());
-
-                for (i, v) in arr.iter().enumerate() {
-                    result.push_str(&v.to_string());
-
-                    // Add a comma between array values, except the last one
-                    if i < arr.len() - 1 {
-                        result.push_str(&self.comma.paint(", ").to_string());
+            Value::Array(array) => {
+                write!(output, "{}", self.square_bracket.paint("[")).unwrap();
+                let mut first = true;
+                for item in array {
+                    if !first {
+                        write!(output, "{} ", self.comma.paint(",")).unwrap();
                     }
-                }
+                    first = false;
 
-                result.push_str(&self.square_bracket.paint("]").to_string());
-                result
+                    // Recursively format the array items
+                    self.format_json(item, output);
+                }
+                write!(output, "{}", self.square_bracket.paint("]")).unwrap();
             }
-            // If it's any other type, return it as-is (values not highlighted)
-            _ => value.to_string(),
+            Value::String(s) => {
+                write!(
+                    output,
+                    "{}{}{}",
+                    self.quote_token.paint("\""),
+                    s,
+                    self.quote_token.paint("\"")
+                )
+                .unwrap();
+            }
+            Value::Number(n) => {
+                write!(output, "{}", n).unwrap();
+            }
+            Value::Bool(b) => {
+                write!(output, "{}", b).unwrap();
+            }
+            Value::Null => {
+                write!(output, "null").unwrap();
+            }
         }
     }
 }
 
 impl Highlight for JsonHighlighter {
     fn apply(&self, input: &str) -> String {
-        // First, attempt to parse the JSON
-        let parsed_json: Value = match serde_json::from_str(input) {
-            Ok(json) => json,
+        // Attempt to parse the input as JSON
+        let json_value: Value = match serde_json::from_str(input) {
+            Ok(value) => value,
             Err(_) => return input.to_string(), // Return as-is if not valid JSON
         };
 
-        // Convert the parsed JSON back into a string with highlighted elements
-        self.highlight_json(parsed_json)
+        let mut output = String::new();
+        self.format_json(&json_value, &mut output);
+        output
     }
 }
 
@@ -90,12 +114,12 @@ mod tests {
     #[test]
     fn test_number_highlighter() {
         let config = JsonConfig {
-            key: red(),
-            quote_token: magenta(),
-            curly_bracket: green(),
-            square_bracket: yellow(),
-            comma: cyan(),
-            colon: blue(),
+            key: yellow(),
+            quote_token: blue(),
+            curly_bracket: cyan(),
+            square_bracket: green(),
+            comma: red(),
+            colon: magenta(),
         };
         let highlighter = JsonHighlighter::new(config);
 
