@@ -38,7 +38,7 @@ impl JsonHighlighter {
 
                     write!(
                         output,
-                        " {}{}{} ",
+                        " {}{}{}",
                         self.quote_token.paint("\""),
                         self.key.paint(key),
                         self.quote_token.paint("\"")
@@ -56,7 +56,7 @@ impl JsonHighlighter {
                 let mut first = true;
                 for item in array {
                     if !first {
-                        write!(output, "{}", self.comma.paint(",")).unwrap();
+                        write!(output, "{} ", self.comma.paint(",")).unwrap();
                     }
                     first = false;
 
@@ -125,15 +125,17 @@ mod tests {
         let cases = vec![
             (
                 r#"{ "name": "John Doe", "age": 43, "phones": [ "+44 1234567", "+44 2345678" ] }"#,
-                r#"{ "name": "John", "age": 30 }"#,
+                r#"[cyan]{[reset] [blue]"[reset][yellow]name[reset][blue]"[reset][magenta]:[reset] [blue]"[reset]John Doe[blue]"[reset][red],[reset] [blue]"[reset][yellow]age[reset][blue]"[reset][magenta]:[reset] 43[red],[reset] [blue]"[reset][yellow]phones[reset][blue]"[reset][magenta]:[reset] [green][[reset][blue]"[reset]+44 1234567[blue]"[reset][red],[reset] [blue]"[reset]+44 2345678[blue]"[reset][green]][reset] [cyan]}[reset]"#,
             ),
-            (r#"{ "name": "John", "age": 30 }"#, r#"{ "name": "John", "age": 30 }"#),
+            (
+                r#"{ "name": "John", "age": 30 }"#,
+                r#"[cyan]{[reset] [blue]"[reset][yellow]name[reset][blue]"[reset][magenta]:[reset] [blue]"[reset]John[blue]"[reset][red],[reset] [blue]"[reset][yellow]age[reset][blue]"[reset][magenta]:[reset] 30 [cyan]}[reset]"#,
+            ),
             ("No jsons here!", "No jsons here!"),
         ];
 
         for (input, expected) in cases {
             let actual = highlighter.apply(input);
-            println!("Actual: {}", actual);
             assert_eq!(expected, actual.convert_escape_codes());
         }
     }
