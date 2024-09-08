@@ -18,4 +18,4 @@ missing-const-for-fn = "deny"
 [dependencies]
 nu-ansi-term = "0.50.1"
 regex = "1.10.6"
-serde_json = "1.0.128"
+serde_json = { version = "1.0.128", features = ["preserve_order"] }

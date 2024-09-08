@@ -1,5 +1,4 @@
 use crate::highlighter::Highlight;
-use crate::style::yellow;
 use crate::JsonConfig;
 use nu_ansi_term::Style as NuStyle;
 use serde_json::Value;
@@ -33,7 +32,7 @@ impl JsonHighlighter {
                 let mut first = true;
                 for (key, val) in map {
                     if !first {
-                        write!(output, "{} ", self.comma.paint(",")).unwrap();
+                        write!(output, "{}", self.comma.paint(",")).unwrap();
                     }
                     first = false;
 
@@ -57,7 +56,7 @@ impl JsonHighlighter {
                 let mut first = true;
                 for item in array {
                     if !first {
-                        write!(output, "{} ", self.comma.paint(",")).unwrap();
+                        write!(output, "{}", self.comma.paint(",")).unwrap();
                     }
                     first = false;
 
@@ -124,7 +123,10 @@ mod tests {
         let highlighter = JsonHighlighter::new(config);
 
         let cases = vec![
-            (r#"{ "name": "John", "age": 30 }"#, r#"{ "name": "John", "age": 30 }"#),
+            (
+                r#"{ "name": "John Doe", "age": 43, "phones": [ "+44 1234567", "+44 2345678" ] }"#,
+                r#"{ "name": "John", "age": 30 }"#,
+            ),
             (r#"{ "name": "John", "age": 30 }"#, r#"{ "name": "John", "age": 30 }"#),
             ("No jsons here!", "No jsons here!"),
         ];
