@@ -41,7 +41,7 @@ impl Default for KeyValueConfig {
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Clone, Copy)]
 pub struct DateTimeConfig {
     pub date: Style,
     pub time: Style,

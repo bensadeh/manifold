@@ -35,60 +35,81 @@ impl DateDashHighlighter {
         Ok(Self {
             regex_yyyy_xx_xx,
             regex_xx_xx_yyyy,
-            date: time_config.time.into(),
+            date: time_config.date.into(),
             separator: time_config.separator.into(),
         })
     }
 
-    fn highlight_date(&self, caps: &Captures<'_>, input: &str) -> String {
-        let year = caps.name("year").map(|m| m.as_str());
-        let first = caps.name("first").map(|m| m.as_str());
-        let second = caps.name("second").map(|m| m.as_str());
-        let separator1 = caps.name("separator").map(|m| m.as_str());
-        let separator2 = caps.name("separator2").map(|m| m.as_str());
+    fn highlight_date(&self, caps: &Captures<'_>) -> Option<String> {
+        let year = caps.name("year").map(|m| self.date.paint(m.as_str()));
+        let first = caps.name("first").map(|m| self.date.paint(m.as_str()));
+        let second = caps.name("second").map(|m| self.date.paint(m.as_str()));
+        let separator1 = caps.name("separator").map(|m| self.separator.paint(m.as_str()));
+        let separator2 = caps.name("separator2").map(|m| self.separator.paint(m.as_str()));
 
         match (year, first, second, separator1, separator2) {
-            (Some(y), Some(f), Some(s), Some(s1), Some(s2)) => format!(
-                "{}{}{}{}{}",
-                self.date.paint(y),
-                self.separator.paint(s1),
-                self.date.paint(f),
-                self.separator.paint(s2),
-                self.date.paint(s)
-            ),
-            _ => input.to_string(),
+            (Some(y), Some(f), Some(s), Some(s1), Some(s2)) => Some(format!("{}{}{}{}{}", y, s1, f, s2, s)),
+            _ => None,
         }
+    }
+
+    fn apply_regexes(&self, input: &str, regexes: &[&Regex]) -> String {
+        regexes.iter().fold(input.to_string(), |acc, regex| {
+            regex
+                .replace_all(&acc, |caps: &Captures<'_>| {
+                    self.highlight_date(caps).unwrap_or_else(|| caps[0].to_string())
+                })
+                .to_string()
+        })
     }
 }
 
 impl Highlight for DateDashHighlighter {
     fn apply(&self, input: &str) -> String {
-        let first_run = self
-            .regex_yyyy_xx_xx
-            .replace_all(input, |caps: &Captures<'_>| self.highlight_date(caps, input))
-            .to_string();
-
-        self.regex_xx_xx_yyyy
-            .replace_all(first_run.as_str(), |caps: &Captures<'_>| {
-                self.highlight_date(caps, input)
-            })
-            .to_string()
+        self.apply_regexes(input, &[&self.regex_yyyy_xx_xx, &self.regex_xx_xx_yyyy])
     }
 }
 
 #[cfg(test)]
 mod tests {
     use crate::highlighter::Highlight;
+    use crate::style::*;
     use crate::tests::escape_code_converter::ConvertEscapeCodes;
 
     use super::*;
 
     #[test]
     fn test_date_dash_highlighter() {
-        let config = DateTimeConfig::default();
+        let config = DateTimeConfig {
+            date: magenta(),
+            separator: blue(),
+            ..DateTimeConfig::default()
+        };
         let highlighter = DateDashHighlighter::new(config).unwrap();
 
-        let cases = vec![("2022-09-09", "2022-09-09"), ("No time here!", "No time here!")];
+        let cases = vec![
+            (
+                "2022-09-09",
+                "[magenta]2022[reset][blue]-[reset][magenta]09[reset][blue]-[reset][magenta]09[reset]",
+            ),
+            (
+                "2022/12/30",
+                "[magenta]2022[reset][blue]/[reset][magenta]12[reset][blue]/[reset][magenta]30[reset]",
+            ),
+            (
+                "09-09-2022",
+                "[magenta]2022[reset][blue]-[reset][magenta]09[reset][blue]-[reset][magenta]09[reset]",
+            ),
+            (
+                "09/09/2022",
+                "[magenta]2022[reset][blue]/[reset][magenta]09[reset][blue]/[reset][magenta]09[reset]",
+            ),
+            ("3022-09-09", "3022-09-09"), // invalid year
+            ("2022-19-39", "2022-19-39"), // invalid month
+            ("2022/19/39", "2022/19/39"), // invalid month
+            ("19/39/3023", "19/39/3023"), // invalid year
+            ("No dates here!", "No dates here!"),
+        ];
 
         for (input, expected) in cases {
             let actual = highlighter.apply(input);
