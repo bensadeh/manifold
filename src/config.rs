@@ -164,6 +164,28 @@ impl Default for UnixProcessConfig {
     }
 }
 
+pub struct JsonConfig {
+    pub key: Style,
+    pub quote_token: Style,
+    pub curly_bracket: Style,
+    pub square_bracket: Style,
+    pub comma: Style,
+    pub colon: Style,
+}
+
+impl Default for JsonConfig {
+    fn default() -> Self {
+        JsonConfig {
+            key: cyan(),
+            quote_token: yellow(),
+            curly_bracket: blue(),
+            square_bracket: red(),
+            comma: magenta(),
+            colon: green(),
+        }
+    }
+}
+
 pub struct QuoteConfig {
     pub quotes_token: char,
     pub color: Style,
