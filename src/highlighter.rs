@@ -62,16 +62,16 @@ impl Default for Highlighter {
     fn default() -> Self {
         Highlighter::builder()
             .with_date_time_highlighters(DateTimeConfig::default())
+            .with_url_highlighter(UrlConfig::default())
             .with_ip_v4_highlighter(IpV4Config::default())
             .with_ip_v6_highlighter(IpV6Config::default())
             .with_uuid_highlighter(UuidConfig::default())
-            .with_quote_highlighter(QuoteConfig::default())
             .with_pointer_highlighter(PointerConfig::default())
             .with_unix_path_highlighter(UnixPathConfig::default())
             .with_unix_process_highlighter(UnixProcessConfig::default())
             .with_key_value_highlighter(KeyValueConfig::default())
-            .with_url_highlighter(UrlConfig::default())
             .with_number_highlighter(NumberConfig::default())
+            .with_quote_highlighter(QuoteConfig::default())
             .build()
             .expect("Default constructor should never fail")
     }
