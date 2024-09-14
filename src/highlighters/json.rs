@@ -46,7 +46,6 @@ impl JsonHighlighter {
                     .unwrap();
                     write!(output, "{} ", self.colon.paint(":")).unwrap();
 
-                    // Recursively format the value
                     self.format_json(val, output);
                 }
                 write!(output, " {}", self.curly_bracket.paint("}")).unwrap();
@@ -60,7 +59,6 @@ impl JsonHighlighter {
                     }
                     first = false;
 
-                    // Recursively format the array items
                     self.format_json(item, output);
                 }
                 write!(output, "{}", self.square_bracket.paint("]")).unwrap();
@@ -90,14 +88,14 @@ impl JsonHighlighter {
 
 impl Highlight for JsonHighlighter {
     fn apply(&self, input: &str) -> String {
-        // Attempt to parse the input as JSON
         let json_value: Value = match serde_json::from_str(input) {
             Ok(value) => value,
-            Err(_) => return input.to_string(), // Return as-is if not valid JSON
+            Err(_) => return input.to_string(),
         };
 
         let mut output = String::new();
         self.format_json(&json_value, &mut output);
+
         output
     }
 }
