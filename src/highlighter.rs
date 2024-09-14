@@ -4,6 +4,7 @@ use crate::highlighters::date_dash::DateDashHighlighter;
 use crate::highlighters::date_time::TimeHighlighter;
 use crate::highlighters::ip_v4::IpV4Highlighter;
 use crate::highlighters::ip_v6::IpV6Highlighter;
+use crate::highlighters::json::JsonHighlighter;
 use crate::highlighters::key_value::KeyValueHighlighter;
 use crate::highlighters::keyword::KeywordHighlighter;
 use crate::highlighters::number::NumberHighlighter;
@@ -61,6 +62,7 @@ impl Default for Highlighter {
     /// be reused.
     fn default() -> Self {
         Highlighter::builder()
+            .with_json_highlighter(JsonConfig::default())
             .with_date_time_highlighters(DateTimeConfig::default())
             .with_url_highlighter(UrlConfig::default())
             .with_ip_v4_highlighter(IpV4Config::default())
@@ -130,6 +132,10 @@ impl HighlightBuilder {
 
     pub fn with_quote_highlighter(self, config: QuoteConfig) -> Self {
         self.try_add_highlighter(Ok(QuoteHighlighter::new(config)))
+    }
+
+    pub fn with_json_highlighter(self, config: JsonConfig) -> Self {
+        self.try_add_highlighter(Ok(JsonHighlighter::new(config)))
     }
 
     pub fn with_keyword_highlighter(mut self, keyword_configs: Vec<KeywordConfig>) -> Self {
