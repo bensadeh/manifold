@@ -15,7 +15,6 @@ impl TimeHighlighter {
     pub fn new(time_config: DateTimeConfig) -> Result<Self, Error> {
         let regex = Regex::new(
             r"(?x)
-            \b                                         # Word boundary, ensures we are at the start of a time
             (?P<T>[T\s])?                              # Capture separator (either a space or T)
             (?P<hours>\d{1,2})(?P<colon1>:)
             (?P<minutes>\d{2})(?P<colon2>:)
@@ -105,7 +104,11 @@ mod tests {
             ),
             (
                 "2022-09-22T07:46:34.171800155Z",
-                "2022-09-22T07:46:34.171800155Z"
+                "2022-09-22[blue]T[reset][red]07[reset][yellow]:[reset][red]46[reset][yellow]:[reset][red]34[reset][yellow].[reset][red]171800155[reset][blue]Z[reset]"
+            ),
+            (
+                "2024-09-14T07:57:30.659+02:00",
+                "2024-09-14[blue]T[reset][red]07[reset][yellow]:[reset][red]57[reset][yellow]:[reset][red]30[reset][yellow].[reset][red]659[reset]+02:00"
             ),
             ("No time here!", "No time here!"),
         ];
