@@ -171,19 +171,17 @@ pub struct JsonConfig {
     pub square_bracket: Style,
     pub comma: Style,
     pub colon: Style,
-    pub pretty_print: bool,
 }
 
 impl Default for JsonConfig {
     fn default() -> Self {
         JsonConfig {
-            key: yellow(),
-            quote_token: faint(),
+            key: faint(),
+            quote_token: Style::default(),
             curly_bracket: blue(),
             square_bracket: red(),
             comma: red(),
             colon: red(),
-            pretty_print: true,
         }
     }
 }

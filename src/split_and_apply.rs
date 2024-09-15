@@ -6,7 +6,7 @@ use crate::highlighter::Highlight;
 const FOUR_KB: usize = 4 * 1024; // 4 KiB
 
 /// Applies a given function to the unhighlighted parts of an input string, preserving any existing highlighting.
-pub fn apply_only_to_unhighlighted(input: &str, highlighter: Arc<dyn Highlight>) -> String {
+pub fn apply_only_to_unhighlighted(input: &str, highlighter: &Arc<dyn Highlight>) -> String {
     let chunks = split_into_chunks(input);
     let mut result = allocate_string(input);
 

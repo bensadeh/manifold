@@ -48,9 +48,9 @@ impl Highlighter {
         self
     }
 
-    pub fn apply(self, text: String) -> String {
+    pub fn apply(&self, text: String) -> String {
         self.highlighters
-            .into_iter()
+            .iter()
             .fold(text, |acc, highlighter| apply_only_to_unhighlighted(&acc, highlighter))
     }
 }
