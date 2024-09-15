@@ -10,11 +10,10 @@
 
 ### Getting started
 
-Add the following to your `Cargo.toml`:
+Run the following Cargo command in your project directory:
 
-```toml
-[dependencies]
-inlet_manifold = "0.1.0"
+```terminal
+cargo add inlet_manifold
 ```
 
 ### Create highlighter from default
