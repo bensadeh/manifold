@@ -9,7 +9,9 @@ fn default_constructor_should_not_panic() {
 
 #[test]
 fn it_works() {
-    let highlighter_result = Highlighter::builder()
+    let mut builder = Highlighter::builder();
+
+    builder
         .with_number_highlighter(NumberConfig {
             number: Style {
                 fg: Some(Color::Cyan),
@@ -23,10 +25,9 @@ fn it_works() {
                 ..Style::default()
             },
         })
-        .with_uuid_highlighter(UuidConfig::default())
-        .build();
+        .with_uuid_highlighter(UuidConfig::default());
 
-    let highlighter = match highlighter_result {
+    let highlighter = match builder.build() {
         Ok(h) => h,
         Err(_) => panic!("Failed to build highlighter"),
     };

@@ -61,7 +61,9 @@ impl Default for Highlighter {
     /// Since we are compiling regexes under the hood, this is an expensive operation and should be done once and then
     /// be reused.
     fn default() -> Self {
-        Highlighter::builder()
+        let mut builder = Highlighter::builder();
+
+        builder
             .with_json_highlighter(JsonConfig::default())
             .with_date_time_highlighters(DateTimeConfig::default())
             .with_url_highlighter(UrlConfig::default())
@@ -73,9 +75,9 @@ impl Default for Highlighter {
             .with_unix_process_highlighter(UnixProcessConfig::default())
             .with_key_value_highlighter(KeyValueConfig::default())
             .with_number_highlighter(NumberConfig::default())
-            .with_quote_highlighter(QuoteConfig::default())
-            .build()
-            .expect("Default constructor should never fail")
+            .with_quote_highlighter(QuoteConfig::default());
+
+        builder.build().expect("Default constructor should never fail")
     }
 }
 
@@ -85,60 +87,71 @@ pub struct HighlightBuilder {
 }
 
 impl HighlightBuilder {
-    pub fn with_number_highlighter(self, config: NumberConfig) -> Self {
-        self.try_add_highlighter(NumberHighlighter::new(config))
+    pub fn with_number_highlighter(&mut self, config: NumberConfig) -> &mut Self {
+        self.try_add_highlighter(NumberHighlighter::new(config));
+        self
     }
 
-    pub fn with_uuid_highlighter(self, config: UuidConfig) -> Self {
-        self.try_add_highlighter(UuidHighlighter::new(config))
+    pub fn with_uuid_highlighter(&mut self, config: UuidConfig) -> &mut Self {
+        self.try_add_highlighter(UuidHighlighter::new(config));
+        self
     }
 
-    pub fn with_unix_path_highlighter(self, config: UnixPathConfig) -> Self {
-        self.try_add_highlighter(UnixPathHighlighter::new(config))
+    pub fn with_unix_path_highlighter(&mut self, config: UnixPathConfig) -> &mut Self {
+        self.try_add_highlighter(UnixPathHighlighter::new(config));
+        self
     }
 
-    pub fn with_unix_process_highlighter(self, config: UnixProcessConfig) -> Self {
-        self.try_add_highlighter(UnixProcessHighlighter::new(config))
+    pub fn with_unix_process_highlighter(&mut self, config: UnixProcessConfig) -> &mut Self {
+        self.try_add_highlighter(UnixProcessHighlighter::new(config));
+        self
     }
 
-    pub fn with_key_value_highlighter(self, config: KeyValueConfig) -> Self {
+    pub fn with_key_value_highlighter(&mut self, config: KeyValueConfig) -> &mut Self {
         self.try_add_highlighter(KeyValueHighlighter::new(config))
     }
 
-    pub fn with_date_time_highlighters(self, config: DateTimeConfig) -> Self {
+    pub fn with_date_time_highlighters(&mut self, config: DateTimeConfig) -> &mut Self {
         self.try_add_highlighter(TimeHighlighter::new(config))
             .try_add_highlighter(DateDashHighlighter::new(config))
     }
 
-    pub fn with_ip_v4_highlighter(self, config: IpV4Config) -> Self {
-        self.try_add_highlighter(IpV4Highlighter::new(config))
+    pub fn with_ip_v4_highlighter(&mut self, config: IpV4Config) -> &mut Self {
+        self.try_add_highlighter(IpV4Highlighter::new(config));
+        self
     }
 
-    pub fn with_ip_v6_highlighter(self, config: IpV6Config) -> Self {
-        self.try_add_highlighter(IpV6Highlighter::new(config))
+    pub fn with_ip_v6_highlighter(&mut self, config: IpV6Config) -> &mut Self {
+        self.try_add_highlighter(IpV6Highlighter::new(config));
+        self
     }
 
-    pub fn with_url_highlighter(self, config: UrlConfig) -> Self {
-        self.try_add_highlighter(UrlHighlighter::new(config))
+    pub fn with_url_highlighter(&mut self, config: UrlConfig) -> &mut Self {
+        self.try_add_highlighter(UrlHighlighter::new(config));
+        self
     }
 
-    pub fn with_pointer_highlighter(self, config: PointerConfig) -> Self {
-        self.try_add_highlighter(PointerHighlighter::new(config))
+    pub fn with_pointer_highlighter(&mut self, config: PointerConfig) -> &mut Self {
+        self.try_add_highlighter(PointerHighlighter::new(config));
+        self
     }
 
-    pub fn with_regex_highlighter(self, regexp: String, style: Style) -> Self {
-        self.try_add_highlighter(RegexpHighlighter::new(regexp, style))
+    pub fn with_regex_highlighter(&mut self, regexp: String, style: Style) -> &mut Self {
+        self.try_add_highlighter(RegexpHighlighter::new(regexp, style));
+        self
     }
 
-    pub fn with_quote_highlighter(self, config: QuoteConfig) -> Self {
-        self.try_add_highlighter(Ok(QuoteHighlighter::new(config)))
+    pub fn with_quote_highlighter(&mut self, config: QuoteConfig) -> &mut Self {
+        self.try_add_highlighter(Ok(QuoteHighlighter::new(config)));
+        self
     }
 
-    pub fn with_json_highlighter(self, config: JsonConfig) -> Self {
-        self.try_add_highlighter(Ok(JsonHighlighter::new(config)))
+    pub fn with_json_highlighter(&mut self, config: JsonConfig) -> &mut Self {
+        self.try_add_highlighter(Ok(JsonHighlighter::new(config)));
+        self
     }
 
-    pub fn with_keyword_highlighter(mut self, keyword_configs: Vec<KeywordConfig>) -> Self {
+    pub fn with_keyword_highlighter(&mut self, keyword_configs: Vec<KeywordConfig>) -> &mut Self {
         let normalized_keyword_configs = normalize_keyword_configs(keyword_configs);
 
         for keyword_config in normalized_keyword_configs {
@@ -153,7 +166,7 @@ impl HighlightBuilder {
         self
     }
 
-    fn try_add_highlighter<T: Highlight + 'static>(mut self, highlighter: Result<T, regex::Error>) -> Self {
+    fn try_add_highlighter<T: Highlight + 'static>(&mut self, highlighter: Result<T, regex::Error>) -> &mut Self {
         match highlighter {
             Ok(h) => self.highlighters.push(Arc::new(h)),
             Err(e) => self.regex_errors.push(e),

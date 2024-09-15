@@ -42,7 +42,9 @@ added is significant. `manifold` will apply the highlighters in the order they w
 Once an item is highlighted, it will not be overwritten by a subsequent highlighter.
 
 ```rust 
-let highlighter_result = Highlighter::builder()
+let mut builder = Highlighter::builder();
+
+builder
     .with_number_highlighter(NumberConfig {
         number: Style {
             fg: Some(Color::Cyan),
@@ -56,11 +58,11 @@ let highlighter_result = Highlighter::builder()
             ..Style::default()
         },
     })
-    .with_uuid_highlighter(UuidConfig::default())
-    .build();
+    .with_uuid_highlighter(UuidConfig::default());
+   
 
 // Using the highlight builder can fail if the regexes inside don't compile
-let highlighter = match highlighter_result {
+let highlighter = match builder.build {
     Ok(h) => h,
     Err(_) => panic!("Failed to build highlighter"),
 };
