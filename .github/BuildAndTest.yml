@@ -1,0 +1,31 @@
+name: Build, test and clippy
+
+on: [ push, pull_request ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build_and_test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Build and test
+        run: |
+          cargo build --verbose
+          cargo test --verbose
+          cargo clippy --verbose
+
+      - name: Check Cargo.lock
+        run: |
+          git diff --exit-code -- Cargo.lock
+          if [ $? -ne 0 ]; then
+            echo "Cargo.lock was modified. Please commit the changes."
+            exit 1
+          fi

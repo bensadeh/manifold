@@ -5,7 +5,7 @@
 #                                                                                                                                                                                                                                                                                                                                                                    
 
 <p align="center">
-<code>manifold</code> is the highlighting crate powering <code><a href="https://github.com/bensadeh/tailspin">tailspin</a></code>
+<code>manifold</code> is the highlighting crate powering <code><a href="https://github.com/bensadeh/tailspin">tailspin</a></code>. Currently WIP.
 </p>
 
 ### Getting started
