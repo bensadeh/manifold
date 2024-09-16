@@ -1,4 +1,4 @@
-use inlet_manifold::{Color, Highlighter, NumberConfig, QuoteConfig, Style, UuidConfig};
+use inlet_manifold::*;
 
 #[test]
 fn default_constructor_should_not_panic() {

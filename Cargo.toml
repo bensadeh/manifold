@@ -1,6 +1,6 @@
 [package]
 name = "inlet_manifold"
-version = "0.2.0"
+version = "0.1.2"
 edition = "2021"
 authors = ["Ben Sadeh"]
 description = "A general purpose highlighting library"
@@ -19,3 +19,4 @@ missing-const-for-fn = "deny"
 nu-ansi-term = "0.50.1"
 regex = "1.10.6"
 serde_json = { version = "1.0.128", features = ["preserve_order"] }
+serde = { version = "1.0.210", features = ["derive"] }
