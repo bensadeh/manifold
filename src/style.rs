@@ -11,48 +11,49 @@ pub struct Style {
     pub underline: bool,
 }
 
-#[derive(PartialEq, Eq, Ord, PartialOrd, Hash, Debug, Clone, Copy, Deserialize)]
+#[derive(PartialEq, Eq, Ord, PartialOrd, Hash, Debug, Clone, Copy, Default, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Color {
-    Black,
-    DarkGray,
-    Red,
-    LightRed,
-    Green,
-    LightGreen,
-    Yellow,
-    LightYellow,
-    Blue,
-    LightBlue,
-    Magenta,
-    LightMagenta,
-    Cyan,
-    LightCyan,
-    White,
-    LightGray,
+    #[default]
     Default,
+    Black,
+    Red,
+    Green,
+    Yellow,
+    Blue,
+    Magenta,
+    Cyan,
+    White,
+    BrightBlack,
+    BrightRed,
+    BrightGreen,
+    BrightYellow,
+    BrightBlue,
+    BrightMagenta,
+    BrightCyan,
+    BrightWhite,
 }
 
 impl From<&Color> for NuColor {
     fn from(color: &Color) -> Self {
         match color {
-            Color::Black => NuColor::Black,
-            Color::DarkGray => NuColor::DarkGray,
-            Color::Red => NuColor::Red,
-            Color::LightRed => NuColor::LightRed,
-            Color::Green => NuColor::Green,
-            Color::LightGreen => NuColor::LightGreen,
-            Color::Yellow => NuColor::Yellow,
-            Color::LightYellow => NuColor::LightYellow,
-            Color::Blue => NuColor::Blue,
-            Color::LightBlue => NuColor::LightBlue,
-            Color::Magenta => NuColor::Magenta,
-            Color::LightMagenta => NuColor::LightMagenta,
-            Color::Cyan => NuColor::Cyan,
-            Color::LightCyan => NuColor::LightCyan,
-            Color::White => NuColor::White,
-            Color::LightGray => NuColor::LightGray,
             Color::Default => NuColor::Default,
+            Color::Black => NuColor::Black,
+            Color::Red => NuColor::Red,
+            Color::Green => NuColor::Green,
+            Color::Yellow => NuColor::Yellow,
+            Color::Blue => NuColor::Blue,
+            Color::Magenta => NuColor::Magenta,
+            Color::Cyan => NuColor::Cyan,
+            Color::White => NuColor::White,
+            Color::BrightBlack => NuColor::DarkGray,
+            Color::BrightRed => NuColor::LightRed,
+            Color::BrightGreen => NuColor::LightGreen,
+            Color::BrightYellow => NuColor::LightYellow,
+            Color::BrightBlue => NuColor::LightBlue,
+            Color::BrightMagenta => NuColor::LightMagenta,
+            Color::BrightCyan => NuColor::LightCyan,
+            Color::BrightWhite => NuColor::LightGray,
         }
     }
 }

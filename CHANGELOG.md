@@ -3,6 +3,7 @@
 ## 0.1.2
 
 - Add serde snake_case attribute to Color enum
+- Add default implementation for Color enum
 
 ## 0.1.1
 
