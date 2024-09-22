@@ -12,6 +12,7 @@ pub struct Style {
 }
 
 #[derive(PartialEq, Eq, Ord, PartialOrd, Hash, Debug, Clone, Copy, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum Color {
     Black,
     DarkGray,
