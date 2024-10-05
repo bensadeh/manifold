@@ -186,14 +186,14 @@ impl Default for JsonConfig {
     }
 }
 
-pub struct QuoteConfig {
+pub struct QuotesConfig {
     pub quotes_token: char,
     pub color: Style,
 }
 
-impl Default for QuoteConfig {
+impl Default for QuotesConfig {
     fn default() -> Self {
-        QuoteConfig {
+        QuotesConfig {
             quotes_token: '"',
             color: yellow(),
         }

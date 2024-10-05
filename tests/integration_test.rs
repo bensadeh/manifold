@@ -18,7 +18,7 @@ fn it_works() {
                 ..Style::default()
             },
         })
-        .with_quote_highlighter(QuoteConfig {
+        .with_quote_highlighter(QuotesConfig {
             quotes_token: '"',
             color: Style {
                 fg: Some(Color::Yellow),

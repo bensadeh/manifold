@@ -3,7 +3,7 @@ use nu_ansi_term::Style as NuStyle;
 use crate::highlighter::Highlight;
 use crate::highlighters::quote::State::{InsideQuote, OutsideQuote};
 use crate::style::Style;
-use crate::QuoteConfig;
+use crate::QuotesConfig;
 
 const RESET: &str = "\x1b[0m";
 
@@ -13,7 +13,7 @@ pub struct QuoteHighlighter {
 }
 
 impl QuoteHighlighter {
-    pub fn new(config: QuoteConfig) -> Self {
+    pub fn new(config: QuotesConfig) -> Self {
         let color = ansi_color_code_without_reset(config.color);
 
         Self {
@@ -101,7 +101,7 @@ mod tests {
 
     #[test]
     fn test_multiple() {
-        let highlighter = QuoteHighlighter::new(QuoteConfig {
+        let highlighter = QuoteHighlighter::new(QuotesConfig {
             quotes_token: '"',
             color: yellow(),
         });
@@ -125,7 +125,7 @@ mod tests {
 
     #[test]
     fn test_no_overwrite() {
-        let highlighter = QuoteHighlighter::new(QuoteConfig {
+        let highlighter = QuoteHighlighter::new(QuotesConfig {
             quotes_token: '"',
             color: yellow(),
         });
@@ -140,7 +140,7 @@ mod tests {
 
     #[test]
     fn test_odd_number_of_highlight_tokens() {
-        let highlighter = QuoteHighlighter::new(QuoteConfig {
+        let highlighter = QuoteHighlighter::new(QuotesConfig {
             quotes_token: '"',
             color: yellow(),
         });

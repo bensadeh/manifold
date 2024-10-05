@@ -75,7 +75,7 @@ impl Default for Highlighter {
             .with_unix_process_highlighter(UnixProcessConfig::default())
             .with_key_value_highlighter(KeyValueConfig::default())
             .with_number_highlighter(NumberConfig::default())
-            .with_quote_highlighter(QuoteConfig::default());
+            .with_quote_highlighter(QuotesConfig::default());
 
         builder.build().expect("Default constructor should never fail")
     }
@@ -141,7 +141,7 @@ impl HighlightBuilder {
         self
     }
 
-    pub fn with_quote_highlighter(&mut self, config: QuoteConfig) -> &mut Self {
+    pub fn with_quote_highlighter(&mut self, config: QuotesConfig) -> &mut Self {
         self.try_add_highlighter(Ok(QuoteHighlighter::new(config)));
         self
     }
