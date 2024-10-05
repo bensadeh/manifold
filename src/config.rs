@@ -188,14 +188,14 @@ impl Default for JsonConfig {
 
 pub struct QuotesConfig {
     pub quotes_token: char,
-    pub color: Style,
+    pub style: Style,
 }
 
 impl Default for QuotesConfig {
     fn default() -> Self {
         QuotesConfig {
             quotes_token: '"',
-            color: yellow(),
+            style: yellow(),
         }
     }
 }

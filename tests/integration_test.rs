@@ -20,7 +20,7 @@ fn it_works() {
         })
         .with_quote_highlighter(QuotesConfig {
             quotes_token: '"',
-            color: Style {
+            style: Style {
                 fg: Some(Color::Yellow),
                 ..Style::default()
             },
