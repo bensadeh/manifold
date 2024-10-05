@@ -13,7 +13,7 @@ fn it_works() {
 
     builder
         .with_number_highlighter(NumberConfig {
-            number: Style {
+            style: Style {
                 fg: Some(Color::Cyan),
                 ..Style::default()
             },

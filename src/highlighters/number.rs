@@ -22,7 +22,7 @@ impl NumberHighlighter {
 
         Ok(Self {
             regex,
-            style: config.number.into(),
+            style: config.style.into(),
         })
     }
 }
@@ -45,7 +45,7 @@ mod tests {
 
     #[test]
     fn test_number_highlighter() {
-        let highlighter = NumberHighlighter::new(NumberConfig { number: red() }).unwrap();
+        let highlighter = NumberHighlighter::new(NumberConfig { style: red() }).unwrap();
 
         let cases = vec![
             (

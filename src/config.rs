@@ -2,12 +2,12 @@ use crate::style::*;
 use crate::Style;
 
 pub struct NumberConfig {
-    pub number: Style,
+    pub style: Style,
 }
 
 impl Default for NumberConfig {
     fn default() -> Self {
-        NumberConfig { number: cyan() }
+        NumberConfig { style: cyan() }
     }
 }
 
