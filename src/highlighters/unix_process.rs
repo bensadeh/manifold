@@ -60,9 +60,9 @@ mod tests {
     #[test]
     fn test_unix_process_highlighter() {
         let highlighter = UnixProcessHighlighter::new(UnixProcessConfig {
-            name: green(),
-            id: yellow(),
-            bracket: red(),
+            name: Style::new().fg(Color::Green),
+            id: Style::new().fg(Color::Yellow),
+            bracket: Style::new().fg(Color::Red),
         })
         .unwrap();
 

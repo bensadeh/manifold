@@ -103,7 +103,7 @@ mod tests {
     fn test_multiple() {
         let highlighter = QuoteHighlighter::new(QuotesConfig {
             quotes_token: '"',
-            style: yellow(),
+            style: Style::new().fg(Color::Yellow),
         });
 
         let cases = vec![
@@ -127,7 +127,7 @@ mod tests {
     fn test_no_overwrite() {
         let highlighter = QuoteHighlighter::new(QuotesConfig {
             quotes_token: '"',
-            style: yellow(),
+            style: Style::new().fg(Color::Yellow),
         });
 
         let input = r#"Hello "abc [red]def[reset] ghi" World"#.to_string().convert_highlight_codes();
@@ -142,7 +142,7 @@ mod tests {
     fn test_odd_number_of_highlight_tokens() {
         let highlighter = QuoteHighlighter::new(QuotesConfig {
             quotes_token: '"',
-            style: yellow(),
+            style: Style::new().fg(Color::Yellow),
         });
 
         let input = r#"Hello "abc def ghi World"#;

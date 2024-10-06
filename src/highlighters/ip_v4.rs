@@ -69,8 +69,8 @@ mod tests {
     #[test]
     fn test_ip_v4_highlighter() {
         let highlighter = IpV4Highlighter::new(IpV4Config {
-            number: blue(),
-            separator: red(),
+            number: Style::new().fg(Color::Blue),
+            separator: Style::new().fg(Color::Red),
         })
         .unwrap();
 

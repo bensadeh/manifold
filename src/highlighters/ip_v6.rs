@@ -52,9 +52,9 @@ mod tests {
     #[test]
     fn test_ip_v4_highlighter() {
         let highlighter = IpV6Highlighter::new(IpV6Config {
-            number: blue(),
-            letter: yellow(),
-            separator: red(),
+            number: Style::new().fg(Color::Blue),
+            letter: Style::new().fg(Color::Yellow),
+            separator: Style::new().fg(Color::Red),
         })
         .unwrap();
 

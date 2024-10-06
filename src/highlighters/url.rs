@@ -96,13 +96,13 @@ mod tests {
     #[test]
     fn test_url_highlighter() {
         let highlighter = UrlHighlighter::new(UrlConfig {
-            http: yellow(),
-            https: white(),
-            host: green(),
-            path: blue(),
-            query_params_key: magenta(),
-            query_params_value: cyan(),
-            symbols: red(),
+            http: Style::new().fg(Color::Yellow),
+            https: Style::new().fg(Color::White),
+            host: Style::new().fg(Color::Green),
+            path: Style::new().fg(Color::Blue),
+            query_params_key: Style::new().fg(Color::Magenta),
+            query_params_value: Style::new().fg(Color::Cyan),
+            symbols: Style::new().fg(Color::Red),
         })
         .unwrap();
 

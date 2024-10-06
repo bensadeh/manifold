@@ -65,9 +65,9 @@ mod tests {
     #[test]
     fn test_uuid_highlighter() {
         let highlighter = UuidHighlighter::new(UuidConfig {
-            number: cyan(),
-            letter: yellow(),
-            dash: red(),
+            number: Style::new().fg(Color::Cyan),
+            letter: Style::new().fg(Color::Yellow),
+            dash: Style::new().fg(Color::Red),
         })
         .unwrap();
 

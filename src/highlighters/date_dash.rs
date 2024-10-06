@@ -81,8 +81,8 @@ mod tests {
     #[test]
     fn test_date_dash_highlighter() {
         let config = DateTimeConfig {
-            date: magenta(),
-            separator: blue(),
+            date: Style::new().fg(Color::Magenta),
+            separator: Style::new().fg(Color::Blue),
             ..DateTimeConfig::default()
         };
         let highlighter = DateDashHighlighter::new(config).unwrap();

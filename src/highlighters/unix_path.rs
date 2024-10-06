@@ -78,8 +78,8 @@ mod tests {
     #[test]
     fn test_unix_path_highlighter() {
         let highlighter = UnixPathHighlighter::new(UnixPathConfig {
-            segment: green(),
-            separator: yellow(),
+            segment: Style::new().fg(Color::Green),
+            separator: Style::new().fg(Color::Yellow),
         })
         .unwrap();
 

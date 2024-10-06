@@ -1,5 +1,4 @@
-use crate::style::*;
-use crate::Style;
+use crate::{Color, Style};
 
 pub struct NumberConfig {
     pub style: Style,
@@ -7,7 +6,9 @@ pub struct NumberConfig {
 
 impl Default for NumberConfig {
     fn default() -> Self {
-        NumberConfig { style: cyan() }
+        NumberConfig {
+            style: Style::new().fg(Color::Cyan),
+        }
     }
 }
 
@@ -20,9 +21,9 @@ pub struct UuidConfig {
 impl Default for UuidConfig {
     fn default() -> Self {
         UuidConfig {
-            number: blue_and_italic(),
-            letter: magenta_and_italic(),
-            dash: red(),
+            number: Style::new().fg(Color::Blue).italic(),
+            letter: Style::new().fg(Color::Magenta).italic(),
+            dash: Style::new().fg(Color::Red),
         }
     }
 }
@@ -35,8 +36,8 @@ pub struct KeyValueConfig {
 impl Default for KeyValueConfig {
     fn default() -> Self {
         KeyValueConfig {
-            key: faint(),
-            separator: white(),
+            key: Style::new().faint(),
+            separator: Style::new().fg(Color::White),
         }
     }
 }
@@ -52,10 +53,10 @@ pub struct DateTimeConfig {
 impl Default for DateTimeConfig {
     fn default() -> Self {
         DateTimeConfig {
-            date: magenta(),
-            time: blue(),
-            zone: red(),
-            separator: faint(),
+            date: Style::new().fg(Color::Magenta),
+            time: Style::new().fg(Color::Blue),
+            zone: Style::new().fg(Color::Red),
+            separator: Style::new().faint(),
         }
     }
 }
@@ -68,8 +69,8 @@ pub struct IpV4Config {
 impl Default for IpV4Config {
     fn default() -> Self {
         IpV4Config {
-            number: blue_and_italic(),
-            separator: red(),
+            number: Style::new().fg(Color::Blue).italic(),
+            separator: Style::new().fg(Color::Red),
         }
     }
 }
@@ -83,9 +84,9 @@ pub struct IpV6Config {
 impl Default for IpV6Config {
     fn default() -> Self {
         IpV6Config {
-            number: blue_and_italic(),
-            letter: magenta_and_italic(),
-            separator: red(),
+            number: Style::new().fg(Color::Blue).italic(),
+            letter: Style::new().fg(Color::Magenta).italic(),
+            separator: Style::new().fg(Color::Red),
         }
     }
 }
@@ -103,13 +104,13 @@ pub struct UrlConfig {
 impl Default for UrlConfig {
     fn default() -> Self {
         UrlConfig {
-            http: red_and_faint(),
-            https: green_and_faint(),
-            host: blue_and_faint(),
-            path: blue(),
-            query_params_key: magenta(),
-            query_params_value: cyan(),
-            symbols: red(),
+            http: Style::new().fg(Color::Red).faint(),
+            https: Style::new().fg(Color::Green).faint(),
+            host: Style::new().fg(Color::Blue).faint(),
+            path: Style::new().fg(Color::Blue),
+            query_params_key: Style::new().fg(Color::Magenta),
+            query_params_value: Style::new().fg(Color::Cyan),
+            symbols: Style::new().fg(Color::Red),
         }
     }
 }
@@ -122,8 +123,8 @@ pub struct UnixPathConfig {
 impl Default for UnixPathConfig {
     fn default() -> Self {
         UnixPathConfig {
-            segment: green(),
-            separator: yellow(),
+            segment: Style::new().fg(Color::Green),
+            separator: Style::new().fg(Color::Yellow),
         }
     }
 }
@@ -139,11 +140,11 @@ pub struct PointerConfig {
 impl Default for PointerConfig {
     fn default() -> Self {
         PointerConfig {
-            number: blue_and_italic(),
-            letter: magenta_and_italic(),
-            separator: faint(),
+            number: Style::new().fg(Color::Blue).italic(),
+            letter: Style::new().fg(Color::Magenta).italic(),
+            separator: Style::new().faint(),
             separator_token: '•',
-            x: red(),
+            x: Style::new().fg(Color::Red),
         }
     }
 }
@@ -157,9 +158,9 @@ pub struct UnixProcessConfig {
 impl Default for UnixProcessConfig {
     fn default() -> Self {
         UnixProcessConfig {
-            name: green(),
-            id: yellow(),
-            bracket: red(),
+            name: Style::new().fg(Color::Green),
+            id: Style::new().fg(Color::Yellow),
+            bracket: Style::new().fg(Color::Red),
         }
     }
 }
@@ -176,12 +177,12 @@ pub struct JsonConfig {
 impl Default for JsonConfig {
     fn default() -> Self {
         JsonConfig {
-            key: faint(),
-            quote_token: Style::default(),
-            curly_bracket: blue(),
-            square_bracket: red(),
-            comma: red(),
-            colon: red(),
+            key: Style::new().faint(),
+            quote_token: Style::new().fg(Color::Default),
+            curly_bracket: Style::new().fg(Color::Blue),
+            square_bracket: Style::new().fg(Color::Red),
+            comma: Style::new().fg(Color::Red),
+            colon: Style::new().fg(Color::Red),
         }
     }
 }
@@ -195,7 +196,7 @@ impl Default for QuotesConfig {
     fn default() -> Self {
         QuotesConfig {
             quotes_token: '"',
-            style: yellow(),
+            style: Style::new().fg(Color::Yellow),
         }
     }
 }

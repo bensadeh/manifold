@@ -11,6 +11,39 @@ pub struct Style {
     pub underline: bool,
 }
 
+impl Style {
+    pub fn new() -> Style {
+        Style::default()
+    }
+
+    pub const fn bold(&self) -> Style {
+        Style { bold: true, ..*self }
+    }
+
+    pub const fn faint(&self) -> Style {
+        Style { faint: true, ..*self }
+    }
+
+    pub const fn italic(&self) -> Style {
+        Style { faint: true, ..*self }
+    }
+
+    pub const fn underline(&self) -> Style {
+        Style {
+            underline: true,
+            ..*self
+        }
+    }
+
+    pub const fn fg(&self, fg: Color) -> Style {
+        Style { fg: Some(fg), ..*self }
+    }
+
+    pub const fn on(&self, bg: Color) -> Style {
+        Style { bg: Some(bg), ..*self }
+    }
+}
+
 #[derive(PartialEq, Eq, Ord, PartialOrd, Hash, Debug, Clone, Copy, Default, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Color {
@@ -83,109 +116,5 @@ impl From<Style> for NuStyle {
         }
 
         nu_style
-    }
-}
-
-pub(crate) fn yellow() -> Style {
-    Style {
-        fg: Some(Color::Yellow),
-        ..Style::default()
-    }
-}
-
-pub(crate) fn green() -> Style {
-    Style {
-        fg: Some(Color::Green),
-        ..Style::default()
-    }
-}
-
-pub(crate) fn green_and_faint() -> Style {
-    Style {
-        fg: Some(Color::Green),
-        faint: true,
-        ..Style::default()
-    }
-}
-
-pub(crate) fn cyan() -> Style {
-    Style {
-        fg: Some(Color::Cyan),
-        ..Style::default()
-    }
-}
-
-pub(crate) fn red() -> Style {
-    Style {
-        fg: Some(Color::Red),
-        ..Style::default()
-    }
-}
-
-pub(crate) fn red_and_faint() -> Style {
-    Style {
-        fg: Some(Color::Red),
-        faint: true,
-        ..Style::default()
-    }
-}
-
-pub(crate) fn white() -> Style {
-    Style {
-        fg: Some(Color::White),
-        ..Style::default()
-    }
-}
-
-pub(crate) fn faint() -> Style {
-    Style {
-        faint: true,
-        ..Style::default()
-    }
-}
-
-pub(crate) fn blue() -> Style {
-    Style {
-        fg: Some(Color::Blue),
-        ..Style::default()
-    }
-}
-
-pub(crate) fn blue_and_faint() -> Style {
-    Style {
-        fg: Some(Color::Blue),
-        faint: true,
-        ..Style::default()
-    }
-}
-
-pub(crate) fn blue_and_italic() -> Style {
-    Style {
-        fg: Some(Color::Blue),
-        italic: true,
-        ..Style::default()
-    }
-}
-
-#[allow(dead_code)]
-pub(crate) fn red_background() -> Style {
-    Style {
-        bg: Some(Color::Red),
-        ..Style::default()
-    }
-}
-
-pub(crate) fn magenta() -> Style {
-    Style {
-        fg: Some(Color::Magenta),
-        ..Style::default()
-    }
-}
-
-pub(crate) fn magenta_and_italic() -> Style {
-    Style {
-        fg: Some(Color::Magenta),
-        italic: true,
-        ..Style::default()
     }
 }

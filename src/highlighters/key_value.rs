@@ -45,16 +45,16 @@ impl Highlight for KeyValueHighlighter {
 #[cfg(test)]
 mod tests {
     use crate::highlighter::Highlight;
-    use crate::style::{red, yellow};
     use crate::tests::escape_code_converter::ConvertEscapeCodes;
+    use crate::{Color, Style};
 
     use super::*;
 
     #[test]
     fn test_number_highlighter() {
         let highlighter = KeyValueHighlighter::new(KeyValueConfig {
-            key: red(),
-            separator: yellow(),
+            key: Style::new().fg(Color::Red),
+            separator: Style::new().fg(Color::Yellow),
         })
         .unwrap();
 

@@ -1,7 +1,6 @@
 use crate::highlighter::Highlight;
 use crate::DateTimeConfig;
 use nu_ansi_term::Style as NuStyle;
-use nu_ansi_term::Style;
 use regex::{Error, Regex};
 
 pub struct TimeHighlighter {
@@ -37,7 +36,7 @@ impl Highlight for TimeHighlighter {
     fn apply(&self, input: &str) -> String {
         self.regex
             .replace_all(input, |caps: &regex::Captures<'_>| {
-                let paint_and_stringify = |name: &str, style: &Style| {
+                let paint_and_stringify = |name: &str, style: &NuStyle| {
                     caps.name(name)
                         .map(|m| style.paint(m.as_str()).to_string())
                         .unwrap_or_default()
@@ -66,18 +65,18 @@ impl Highlight for TimeHighlighter {
 #[cfg(test)]
 mod tests {
     use crate::highlighter::Highlight;
-    use crate::style::*;
     use crate::tests::escape_code_converter::ConvertEscapeCodes;
+    use crate::{Color, Style};
 
     use super::*;
 
     #[test]
     fn test_time_highlighter() {
         let config = DateTimeConfig {
-            date: Default::default(),
-            time: red(),
-            zone: blue(),
-            separator: yellow(),
+            date: Style::new(),
+            time: Style::new().fg(Color::Red),
+            zone: Style::new().fg(Color::Blue),
+            separator: Style::new().fg(Color::Yellow),
         };
         let highlighter = TimeHighlighter::new(config).unwrap();
 

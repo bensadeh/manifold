@@ -55,7 +55,7 @@ mod tests {
     fn test_foreground_keyword_highlighter() {
         let config = KeywordConfig {
             words: vec!["null".to_string()],
-            style: red(),
+            style: Style::new().fg(Color::Red),
         };
         let highlighter = KeywordHighlighter::new(config).unwrap();
 
@@ -78,7 +78,7 @@ mod tests {
     fn test_background_keyword_highlighter() {
         let config = KeywordConfig {
             words: vec!["null".to_string()],
-            style: red_background(),
+            style: Style::new().on(Color::Red),
         };
         let highlighter = KeywordHighlighter::new(config).unwrap();
 

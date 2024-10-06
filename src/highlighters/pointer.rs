@@ -1,4 +1,4 @@
-use nu_ansi_term::{Style as NuStyle, Style};
+use nu_ansi_term::Style as NuStyle;
 use regex::{Captures, Error, Regex};
 
 use crate::highlighter::Highlight;
@@ -82,7 +82,7 @@ impl Highlight for PointerHighlighter {
     }
 }
 
-fn highlight_char(c: char, number: Style, x: Style, letter: Style) -> String {
+fn highlight_char(c: char, number: NuStyle, x: NuStyle, letter: NuStyle) -> String {
     match c {
         '0'..='9' => format!("{}", number.paint(c.to_string())),
         'x' | 'X' => format!("{}", x.paint(c.to_string())),
@@ -102,11 +102,11 @@ mod tests {
     #[test]
     fn test_pointer_highlighter() {
         let highlighter = PointerHighlighter::new(PointerConfig {
-            number: blue(),
-            letter: magenta(),
-            separator: green(),
+            number: Style::new().fg(Color::Blue),
+            letter: Style::new().fg(Color::Magenta),
+            separator: Style::new().fg(Color::Green),
             separator_token: '•',
-            x: red(),
+            x: Style::new().fg(Color::Red),
         })
         .unwrap();
 

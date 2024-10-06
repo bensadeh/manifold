@@ -28,7 +28,6 @@ pub fn normalize_keyword_configs(configs: Vec<KeywordConfig>) -> Vec<KeywordConf
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::style::red;
     use crate::Color::*;
     use std::default::Default;
 
@@ -102,17 +101,17 @@ mod tests {
         let configs = vec![
             KeywordConfig {
                 words: vec!["error".to_string()],
-                style: red(),
+                style: Style::new().fg(Red),
             },
             KeywordConfig {
                 words: vec!["null".to_string()],
-                style: red(),
+                style: Style::new().fg(Red),
             },
         ];
 
         let expected = vec![KeywordConfig {
             words: vec!["error".to_string(), "null".to_string()],
-            style: red(),
+            style: Style::new().fg(Red),
         }];
 
         let normalized_configs = normalize_keyword_configs(configs);

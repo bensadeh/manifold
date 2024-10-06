@@ -45,7 +45,10 @@ mod tests {
 
     #[test]
     fn test_number_highlighter() {
-        let highlighter = NumberHighlighter::new(NumberConfig { style: red() }).unwrap();
+        let highlighter = NumberHighlighter::new(NumberConfig {
+            style: Style::new().fg(Color::Red),
+        })
+        .unwrap();
 
         let cases = vec![
             (

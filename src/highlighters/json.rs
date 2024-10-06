@@ -111,12 +111,12 @@ mod tests {
     #[test]
     fn test_number_highlighter() {
         let config = JsonConfig {
-            key: yellow(),
-            quote_token: blue(),
-            curly_bracket: cyan(),
-            square_bracket: green(),
-            comma: red(),
-            colon: magenta(),
+            key: Style::new().fg(Color::Yellow),
+            quote_token: Style::new().fg(Color::Blue),
+            curly_bracket: Style::new().fg(Color::Cyan),
+            square_bracket: Style::new().fg(Color::Green),
+            comma: Style::new().fg(Color::Red),
+            colon: Style::new().fg(Color::Magenta),
         };
         let highlighter = JsonHighlighter::new(config);
 
