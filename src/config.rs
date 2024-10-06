@@ -206,3 +206,9 @@ pub struct KeywordConfig {
     pub words: Vec<String>,
     pub style: Style,
 }
+
+#[derive(PartialEq, Eq, Ord, PartialOrd, Debug)]
+pub struct RegexConfig {
+    pub regex: String,
+    pub style: Style,
+}

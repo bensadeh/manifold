@@ -17,7 +17,6 @@ use crate::highlighters::url::UrlHighlighter;
 use crate::highlighters::uuid::UuidHighlighter;
 use crate::normalizer::normalize_keyword_configs;
 use crate::split_and_apply::apply_only_to_unhighlighted;
-use crate::Style;
 use std::sync::Arc;
 
 pub trait Highlight: Sync + Send {
@@ -136,8 +135,8 @@ impl HighlightBuilder {
         self
     }
 
-    pub fn with_regex_highlighter(&mut self, regexp: String, style: Style) -> &mut Self {
-        self.try_add_highlighter(RegexpHighlighter::new(regexp, style));
+    pub fn with_regex_highlighter(&mut self, config: RegexConfig) -> &mut Self {
+        self.try_add_highlighter(RegexpHighlighter::new(config));
         self
     }
 

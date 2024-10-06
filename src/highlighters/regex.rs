@@ -1,5 +1,5 @@
 use crate::highlighter::Highlight;
-use crate::Style;
+use crate::RegexConfig;
 use nu_ansi_term::Style as NuStyle;
 use regex::{Error, Regex};
 
@@ -23,12 +23,12 @@ impl RegexpHighlighter {
     /// apply the style to any text that matches the pattern within the capture group.
     /// For example, in the text `'Started process.'`, only the word `'process'` will be styled.
     ///
-    pub fn new(regular_expression: String, style: Style) -> Result<Self, Error> {
-        let regex = Regex::new(regular_expression.as_str())?;
+    pub fn new(config: RegexConfig) -> Result<Self, Error> {
+        let regex = Regex::new(config.regex.as_str())?;
 
         Ok(Self {
             regex,
-            style: style.into(),
+            style: config.style.into(),
         })
     }
 }
