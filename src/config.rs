@@ -158,8 +158,8 @@ pub struct UnixProcessConfig {
 impl Default for UnixProcessConfig {
     fn default() -> Self {
         UnixProcessConfig {
-            name: Style::new().fg(Color::Green),
-            id: Style::new().fg(Color::Yellow),
+            name: Style::new().fg(Color::Yellow),
+            id: Style::new().fg(Color::Cyan),
             bracket: Style::new().fg(Color::Red),
         }
     }
