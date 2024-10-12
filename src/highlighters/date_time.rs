@@ -14,11 +14,11 @@ impl TimeHighlighter {
     pub fn new(time_config: DateTimeConfig) -> Result<Self, Error> {
         let regex = Regex::new(
             r"(?x)
-            (?P<T>[T\s])?                              # Capture separator (either a space or T)
-            (?P<hours>\d{1,2})(?P<colon1>:)
-            (?P<minutes>\d{2})(?P<colon2>:)
-            (?P<seconds>\d{2})
-            (?P<frac_sep>[.,:])?(?P<frac_digits>\d+)?  # Capture fractional seconds (separator and digits separately)
+            (?P<T>[T\s])?                              
+            (?P<hours>[01]?\d|2[0-3])(?P<colon1>:)
+            (?P<minutes>[0-5]\d)(?P<colon2>:)
+            (?P<seconds>[0-5]\d)
+            (?P<frac_sep>[.,:])?(?P<frac_digits>\d+)?  
             (?P<tz>Z)?            
             ",
         )?;
@@ -110,6 +110,7 @@ mod tests {
                 "2024-09-14[blue]T[reset][red]07[reset][yellow]:[reset][red]57[reset][yellow]:[reset][red]30[reset][yellow].[reset][red]659[reset]+02:00"
             ),
             ("No time here!", "No time here!"),
+            ("2001:db8::ff00:42:8329", "2001:db8::ff00:42:8329"),
         ];
 
         for (input, expected) in cases {
