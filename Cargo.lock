@@ -35,7 +35,7 @@ dependencies = [
 
 [[package]]
 name = "inlet_manifold"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "nu-ansi-term",
  "regex",
