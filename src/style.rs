@@ -25,7 +25,7 @@ impl Style {
     }
 
     pub const fn italic(&self) -> Style {
-        Style { faint: true, ..*self }
+        Style { italic: true, ..*self }
     }
 
     pub const fn underline(&self) -> Style {
