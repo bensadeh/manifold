@@ -60,16 +60,16 @@ mod tests {
     #[test]
     fn test_unix_process_highlighter() {
         let highlighter = UnixProcessHighlighter::new(UnixProcessConfig {
-            name: Style::new().fg(Color::Green),
-            id: Style::new().fg(Color::Yellow),
-            bracket: Style::new().fg(Color::Red),
+            name: Style::new().fg(Color::Magenta),
+            id: Style::new().fg(Color::Green),
+            bracket: Style::new().fg(Color::Blue),
         })
         .unwrap();
 
         let cases = vec![
             (
                 "process[1]",
-                "[green]process[reset][red][[reset][yellow]1[reset][red]][reset]",
+                "[magenta]process[reset][blue][[reset][green]1[reset][blue]][reset]",
             ),
             ("No process here!", "No process here!"),
         ];

@@ -5,6 +5,7 @@ pub use crate::style::Color;
 pub use crate::style::Style;
 
 pub mod config;
+pub mod defaults;
 mod error;
 pub mod highlighter;
 mod highlighters;
