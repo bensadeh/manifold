@@ -13,7 +13,7 @@ pub struct IpV6Highlighter {
 
 impl IpV6Highlighter {
     pub fn new(config: IpV6Config) -> Result<Self, Error> {
-        let regex = Regex::new(r#"(?:[0-9a-fA-F\:\.]{3,})"#)?;
+        let regex = Regex::new(r#"([0-9a-fA-F\:\.]{3,})(?:(/)(\d{1,3}))?"#)?;
 
         Ok(Self {
             regex,
@@ -27,17 +27,28 @@ impl IpV6Highlighter {
 impl Highlight for IpV6Highlighter {
     fn apply(&self, input: &str) -> String {
         self.regex
-            .replace_all(input, |caps: &Captures<'_>| match caps[0].parse::<Ipv6Addr>() {
-                Ok(_ip) => caps[0]
-                    .chars()
-                    .map(|c| match c {
-                        '0'..='9' => self.number.paint(c.to_string()).to_string(),
-                        'a'..='f' | 'A'..='F' => self.letter.paint(c.to_string()).to_string(),
-                        ':' | '.' => self.separator.paint(c.to_string()).to_string(),
-                        _ => c.to_string(),
-                    })
-                    .collect::<String>(),
-                Err(_err) => caps[0].to_string(),
+            .replace_all(input, |caps: &Captures<'_>| match caps[1].parse::<Ipv6Addr>() {
+                Ok(_ip) => {
+                    let mut output = caps[1]
+                        .chars()
+                        .map(|c| match c {
+                            '0'..='9' => self.number.paint(c.to_string()).to_string(),
+                            'a'..='f' | 'A'..='F' => self.letter.paint(c.to_string()).to_string(),
+                            ':' | '.' => self.separator.paint(c.to_string()).to_string(),
+                            _ => c.to_string(),
+                        })
+                        .collect::<String>();
+
+                    let slash = caps.get(2);
+                    let netmask = caps.get(3);
+                    if let (Some(slash), Some(netmask)) = (slash, netmask) {
+                        output.push_str(&self.separator.paint(slash.as_str()).to_string());
+                        output.push_str(&self.number.paint(netmask.as_str()).to_string());
+                    }
+
+                    output
+                }
+                Err(_err) => caps[1].to_string(),
             })
             .to_string()
     }
@@ -74,7 +85,12 @@ mod tests {
                 "[red]:[reset][red]:[reset][blue]1[reset]"),
             (
                 "::ffff:127.0.0.1",
-                "[red]:[reset][red]:[reset][yellow]f[reset][yellow]f[reset][yellow]f[reset][yellow]f[reset][red]:[reset][blue]1[reset][blue]2[reset][blue]7[reset][red].[reset][blue]0[reset][red].[reset][blue]0[reset][red].[reset][blue]1[reset]"),
+                "[red]:[reset][red]:[reset][yellow]f[reset][yellow]f[reset][yellow]f[reset][yellow]f[reset][red]:[reset][blue]1[reset][blue]2[reset][blue]7[reset][red].[reset][blue]0[reset][red].[reset][blue]0[reset][red].[reset][blue]1[reset]"
+            ),
+            (
+                "fe80::/10",
+                "[yellow]f[reset][yellow]e[reset][blue]8[reset][blue]0[reset][red]:[reset][red]:[reset][red]/[reset][blue]10[reset]"
+            ),
             ("Not ipv4: 192.168.0.1", "Not ipv4: 192.168.0.1"),
             ("11:47:39:850", "11:47:39:850"),
         ];
