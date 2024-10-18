@@ -14,12 +14,15 @@ impl TimeHighlighter {
     pub fn new(time_config: DateTimeConfig) -> Result<Self, Error> {
         let regex = Regex::new(
             r"(?x)
-            (?P<T>[T\s])?                              
-            (?P<hours>[01]?\d|2[0-3])(?P<colon1>:)
-            (?P<minutes>[0-5]\d)(?P<colon2>:)
+            (?P<T>([T\s])|\b)
+            (?P<hours>[01]?\d|2[0-3])
+            (?P<colon1>:)
+            (?P<minutes>[0-5]\d)
+            (?P<colon2>:)
             (?P<seconds>[0-5]\d)
-            (?P<frac_sep>[.,:])?(?P<frac_digits>\d+)?  
-            (?P<tz>Z)?            
+            (?P<frac_sep>[.,:])?
+            (?P<frac_digits>\d+)?
+            (?P<tz>(Z|\s*(?:\+|-)\d{2}(?::?\d{2})?))?
             ",
         )?;
 
@@ -38,6 +41,7 @@ impl Highlight for TimeHighlighter {
             .replace_all(input, |caps: &regex::Captures<'_>| {
                 let paint_and_stringify = |name: &str, style: &NuStyle| {
                     caps.name(name)
+                        .filter(|m| !m.is_empty())
                         .map(|m| style.paint(m.as_str()).to_string())
                         .unwrap_or_default()
                 };
@@ -107,7 +111,11 @@ mod tests {
             ),
             (
                 "2024-09-14T07:57:30.659+02:00",
-                "2024-09-14[blue]T[reset][red]07[reset][yellow]:[reset][red]57[reset][yellow]:[reset][red]30[reset][yellow].[reset][red]659[reset]+02:00"
+                "2024-09-14[blue]T[reset][red]07[reset][yellow]:[reset][red]57[reset][yellow]:[reset][red]30[reset][yellow].[reset][red]659[reset][blue]+02:00[reset]"
+            ),
+            (
+                "09/Sep/2024:17:27:39 +0200     Resource access",
+                "09/Sep/2024:[red]17[reset][yellow]:[reset][red]27[reset][yellow]:[reset][red]39[reset][blue] +0200[reset]     Resource access",
             ),
             ("No time here!", "No time here!"),
             ("2001:db8::ff00:42:8329", "2001:db8::ff00:42:8329"),
