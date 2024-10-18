@@ -13,7 +13,7 @@ pub struct UnixProcessHighlighter {
 
 impl UnixProcessHighlighter {
     pub fn new(config: UnixProcessConfig) -> Result<Self, Error> {
-        let regex = Regex::new(r"(?P<process_name>\([^)]+\)|[\w-]+)\[(?P<process_id>\d+)]")?;
+        let regex = Regex::new(r"(?P<process_name>\([^)]+\)|[\w/-]+)\[(?P<process_id>\d+)]")?;
 
         Ok(Self {
             regex,
@@ -70,6 +70,10 @@ mod tests {
             (
                 "process[1]",
                 "[magenta]process[reset][blue][[reset][green]1[reset][blue]][reset]",
+            ),
+            (
+                "postfix/postscreen[1894]: CONNECT from [192.168.1.22]:12345 to [127.0.0.1]:25",
+                "[magenta]postfix/postscreen[reset][blue][[reset][green]1894[reset][blue]][reset]: CONNECT from [192.168.1.22]:12345 to [127.0.0.1]:25"
             ),
             ("No process here!", "No process here!"),
         ];
