@@ -19,7 +19,9 @@ impl IpV4Highlighter {
             (\.)                 # Match a literal dot (.)
             (\d{1,3})            # Match 1 to 3 digits (next IP segment)
             (\.)                 # Match a literal dot (.)
-            (\d{1,3}\b)          # Match 1 to 3 digits at a word boundary (end of the IP segment)
+            (\d{1,3})            # Match 1 to 3 digits at a word boundary
+            (?:(/)(\d{1,2}))?    # Match optional netmask
+            \b                   # End of the IP segment
     ",
         )?;
 
@@ -36,20 +38,17 @@ impl Highlight for IpV4Highlighter {
         let segment = &self.number;
         let separator = &self.separator;
         let highlight_groups = [
-            (segment, 1),
-            (separator, 2),
-            (segment, 3),
-            (separator, 4),
-            (segment, 5),
-            (separator, 6),
-            (segment, 7),
+            segment, separator, segment, separator, segment, separator, segment, separator, segment,
         ];
 
         self.regex
             .replace_all(input, |caps: &Captures<'_>| {
                 let mut output = String::new();
-                for &(color, group) in &highlight_groups {
-                    output.push_str(&format!("{}", color.paint(&caps[group])));
+                for (group, cap) in caps.iter().enumerate().skip(1) {
+                    if let Some(cap) = cap {
+                        let color = highlight_groups[group - 1];
+                        output.push_str(&format!("{}", color.paint(cap.as_str())));
+                    }
                 }
                 output
             })
@@ -82,6 +81,10 @@ mod tests {
             (
                 "192.168.0.1",
                 "[blue]192[reset][red].[reset][blue]168[reset][red].[reset][blue]0[reset][red].[reset][blue]1[reset]",
+            ),
+            (
+                "192.168.0.0/24",
+                "[blue]192[reset][red].[reset][blue]168[reset][red].[reset][blue]0[reset][red].[reset][blue]0[reset][red]/[reset][blue]24[reset]",
             ),
             ("Invalid regex: 192.168.0", "Invalid regex: 192.168.0"),
         ];
