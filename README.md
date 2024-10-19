@@ -27,7 +27,7 @@ use the **builder pattern**.
 ```rust
 let highlighter = Highlighter::default();
 
-let input = "Hello 42 world".to_string();
+let input = "Hello 42 world";
 let output = highlighter.apply(input);
 
 println!("{}", input);  // "Hello 42 world"
@@ -67,7 +67,7 @@ let highlighter = match builder.build {
     Err(_) => panic!("Failed to build highlighter"),
 };
 
-let input = "Hello 42 world".to_string();
+let input = "Hello 42 world";
 let output = highlighter.apply(input);
 
 println!("{}", input);  // "Hello 42 world"

@@ -47,10 +47,10 @@ impl Highlighter {
         self
     }
 
-    pub fn apply(&self, text: String) -> String {
-        self.highlighters
-            .iter()
-            .fold(text, |acc, highlighter| apply_only_to_unhighlighted(&acc, highlighter))
+    pub fn apply(&self, input: &str) -> String {
+        self.highlighters.iter().fold(input.to_owned(), |acc, highlighter| {
+            apply_only_to_unhighlighted(&acc, highlighter)
+        })
     }
 }
 
