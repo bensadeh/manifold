@@ -115,13 +115,13 @@ impl HighlightBuilder {
             .try_add_highlighter(DateDashHighlighter::new(config))
     }
 
-    pub fn with_ip_v4_highlighter(&mut self, config: IpV4Config) -> &mut Self {
-        self.try_add_highlighter(IpV4Highlighter::new(config));
+    pub fn with_ip_v6_highlighter(&mut self, config: IpV6Config) -> &mut Self {
+        self.try_add_highlighter(IpV6Highlighter::new(config));
         self
     }
 
-    pub fn with_ip_v6_highlighter(&mut self, config: IpV6Config) -> &mut Self {
-        self.try_add_highlighter(IpV6Highlighter::new(config));
+    pub fn with_ip_v4_highlighter(&mut self, config: IpV4Config) -> &mut Self {
+        self.try_add_highlighter(IpV4Highlighter::new(config));
         self
     }
 
