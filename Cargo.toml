@@ -19,4 +19,4 @@ missing-const-for-fn = "deny"
 nu-ansi-term = "0.50.1"
 regex = "1.11.1"
 serde_json = { version = "1.0.140", features = ["preserve_order"] }
-serde = { version = "1.0.218", features = ["derive"] }
+serde = { version = "1.0.219", features = ["derive"] }
