@@ -1,8 +1,9 @@
 # Changelog
-## 0.2.0
 
+## 0.1.4
 
-
+- Add support for slashes in process names (thanks @cgzones !)
+- Update IP v4 and v6 regexes and support CIDR notation (thanks @cgzones !)
 
 ## 0.1.3
 

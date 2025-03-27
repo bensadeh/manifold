@@ -1,6 +1,6 @@
 [package]
 name = "inlet_manifold"
-version = "0.2.0"
+version = "0.1.4"
 edition = "2021"
 authors = ["Ben Sadeh"]
 description = "A general purpose highlighting library"
