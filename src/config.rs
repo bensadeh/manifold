@@ -77,13 +77,13 @@ pub struct QuotesConfig {
     pub style: Style,
 }
 
-#[derive(PartialEq, Eq, Ord, PartialOrd, Debug)]
+#[derive(PartialEq, Eq, Ord, PartialOrd, Debug, Clone)]
 pub struct KeywordConfig {
     pub words: Vec<String>,
     pub style: Style,
 }
 
-#[derive(PartialEq, Eq, Ord, PartialOrd, Debug)]
+#[derive(PartialEq, Eq, Ord, PartialOrd, Debug, Clone)]
 pub struct RegexConfig {
     pub regex: String,
     pub style: Style,
