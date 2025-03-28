@@ -3,6 +3,7 @@
 ## 0.2.0
 
 - Derive copy on KeywordConfig
+- Update Rust edition to 2024
 
 ## 0.1.4
 

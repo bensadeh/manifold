@@ -45,7 +45,7 @@ impl Highlight for QuoteHighlighter {
             match &mut state {
                 InsideQuote {
                     color_inside_quote: color,
-                    ref mut potential_reset_code,
+                    potential_reset_code,
                 } => {
                     if ch == self.quotes_token {
                         output.push(ch);
