@@ -1,3 +1,6 @@
+> [!NOTE]  
+> `manifold` has been merged back into `tailspin` and is no longer a separate crate.
+
 <p align="center">
   <img src="assets/manifold.png" width="230"/>
 </p>
